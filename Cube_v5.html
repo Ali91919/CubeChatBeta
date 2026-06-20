@@ -1,0 +1,3133 @@
+<!DOCTYPE html>
+<!--
+╔══════════════════════════════════════════════════════╗
+║     Cube — Social Network  |  BETA v0.2                ║
+║     © 2025 Cube. All Rights Reserved.          ║
+║     Unauthorized copying is strictly prohibited.    ║
+╚══════════════════════════════════════════════════════╝
+-->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cube — شبکه اجتماعی</title>
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--bg4:#22222f;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --accent:#7c3aed;--accent2:#6d28d9;--accent3:#8b5cf6;
+  --blue:#3b82f6;--gold:#f59e0b;--green:#10b981;--red:#ef4444;--orange:#f97316;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+  --r:12px;--r2:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif;font-size:15px;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px;}
+button{cursor:pointer;font-family:inherit;}
+input,textarea,select{font-family:inherit;}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* ── AUTH ── */
+#auth-screen{background:radial-gradient(ellipse at 60% 20%,#1a0a2e 0%,#0a0a0f 60%);display:flex;align-items:center;justify-content:center;padding:20px;min-height:100vh;}
+#auth-screen.active{display:flex;}
+.auth-box{width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:36px 32px;box-shadow:0 30px 80px rgba(0,0,0,.7);}
+.auth-logo{text-align:center;margin-bottom:28px;}
+.logo-n{font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--accent3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.auth-logo p{color:var(--text2);font-size:13px;margin-top:5px;letter-spacing:.5px;}
+.auth-tabs{display:flex;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:22px;gap:3px;}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--text2);border-radius:8px;font-size:14px;font-weight:500;transition:all .2s;}
+.auth-tab.active{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.4);}
+.fg{margin-bottom:13px;}
+.fg label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+.fg input,.fg select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus{border-color:var(--accent);}
+.fg input::placeholder{color:var(--text3);}
+.auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;transition:all .2s;box-shadow:0 4px 16px rgba(124,58,237,.4);}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(124,58,237,.5);}
+.auth-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;color:#ef4444;font-size:13px;margin-bottom:13px;display:none;}
+.auth-err.show{display:block;}
+
+/* ── APP ── */
+#app-screen.active{display:flex;min-height:100vh;}
+#sidebar{width:256px;min-width:256px;background:var(--bg2);border-left:1px solid var(--border);position:fixed;right:0;top:0;bottom:0;display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sidebar-logo .sln{font-size:26px;font-weight:900;background:linear-gradient(135deg,var(--accent3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sidebar-logo .beta-badge{font-size:10px;background:rgba(124,58,237,.2);color:var(--accent3);padding:2px 8px;border-radius:20px;border:1px solid rgba(124,58,237,.3);}
+.nav-sec{padding:10px 8px;}
+.nav-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px 6px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;color:var(--text2);font-size:14px;font-weight:500;position:relative;user-select:none;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{background:rgba(124,58,237,.15);color:var(--accent3);}
+.ni-ico{font-size:17px;width:22px;text-align:center;}
+.ni-badge{position:absolute;left:12px;top:7px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px;min-width:17px;text-align:center;}
+.sidebar-user{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+.su-card{display:flex;align-items:center;gap:9px;padding:9px;border-radius:10px;cursor:pointer;transition:background .15s;}
+.su-card:hover{background:var(--bg3);}
+.su-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;overflow:hidden;}
+.su-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.su-info{flex:1;min-width:0;}
+.su-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.su-handle{font-size:11px;color:var(--text2);}
+#main-content{margin-right:256px;flex:1;min-width:0;}
+#topbar{position:sticky;top:0;background:rgba(10,10,15,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;z-index:90;}
+.topbar-title{font-size:17px;font-weight:800;}
+.topbar-actions{display:flex;gap:7px;}
+.tb-btn{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:6px 13px;border-radius:20px;font-size:13px;transition:all .2s;}
+.tb-btn:hover{background:var(--bg3);color:var(--text);}
+.tb-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.tb-btn.primary:hover{background:var(--accent2);}
+.content-wrap{max-width:660px;margin:0 auto;padding:18px 14px;}
+
+/* ── LEVEL BADGE ── */
+.level-badge{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.level-badge .lv-num{position:absolute;left:-4px;bottom:-2px;background:#000;color:#fff;font-size:10px;font-weight:900;line-height:1;padding:1px 3px;border-radius:4px;border:1px solid rgba(255,255,255,.2);}
+.lv-ring{position:absolute;left:-6px;bottom:-6px;width:22px;height:11px;background:rgba(0,0,0,.8);border-radius:0 0 11px 11px;border:1px solid rgba(255,255,255,.15);border-top:none;display:flex;align-items:center;justify-content:center;}
+.lv-ring span{font-size:9px;font-weight:900;color:#fff;}
+
+/* ── LEVEL AVATAR FRAMES ── */
+/* Lv 1-4: plain grey */
+.av-frame-grey{box-shadow:0 0 0 3px #475569;}
+/* Lv 5-9: blue */
+.av-frame-blue{box-shadow:0 0 0 3px #3b82f6,0 0 10px rgba(59,130,246,.4);}
+/* Lv 10-14: purple */
+.av-frame-purple{box-shadow:0 0 0 3px #8b5cf6,0 0 14px rgba(139,92,246,.5);}
+/* Lv 15-19: gold */
+.av-frame-gold{box-shadow:0 0 0 3px #f59e0b,0 0 16px rgba(245,158,11,.5);}
+/* Lv 20: rainbow animated */
+.av-frame-rainbow{box-shadow:0 0 0 3px transparent;animation:rainbowBorder 2.5s linear infinite;border-radius:50%;}
+@keyframes rainbowBorder{
+  0%{box-shadow:0 0 0 3px #ef4444,0 0 18px rgba(239,68,68,.5);}
+  20%{box-shadow:0 0 0 3px #f97316,0 0 18px rgba(249,115,22,.5);}
+  40%{box-shadow:0 0 0 3px #f59e0b,0 0 18px rgba(245,158,11,.5);}
+  60%{box-shadow:0 0 0 3px #10b981,0 0 18px rgba(16,185,129,.5);}
+  80%{box-shadow:0 0 0 3px #3b82f6,0 0 18px rgba(59,130,246,.5);}
+  100%{box-shadow:0 0 0 3px #ef4444,0 0 18px rgba(239,68,68,.5);}
+}
+
+/* ── SHOP PAGE ── */
+#page-shop .content-wrap{max-width:700px;}
+.shop-banner{background:linear-gradient(135deg,#1a0a2e,#0f172a);border:1px solid rgba(124,58,237,.4);border-radius:var(--r2);padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.shop-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(124,58,237,.25),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(245,158,11,.15),transparent 50%);pointer-events:none;}
+.shop-banner-title{font-size:22px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;position:relative;}
+.shop-banner-sub{font-size:13px;color:var(--text2);margin-bottom:16px;position:relative;}
+.shop-balance{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);border-radius:20px;padding:7px 16px;font-size:14px;font-weight:700;position:relative;}
+.shop-balance span{color:var(--accent3);}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:20px;}
+.shop-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;transition:all .2s;position:relative;overflow:hidden;}
+.shop-item:hover{border-color:rgba(124,58,237,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.shop-item-emoji{font-size:44px;}
+.shop-item-name{font-size:14px;font-weight:800;color:var(--text);}
+.shop-item-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+.shop-item-price{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:4px 12px;font-size:12px;font-weight:700;color:var(--gold);}
+.shop-buy-btn{width:100%;padding:9px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.shop-buy-btn:hover{opacity:.88;}
+.shop-buy-btn:disabled{opacity:.4;cursor:not-allowed;}
+.shop-item-badge{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.shop-item-badge.new{background:var(--green);}
+.shop-item-badge.hot{background:var(--orange);}
+.shop-section-title{font-size:13px;font-weight:700;color:var(--text2);margin:18px 0 10px;text-transform:uppercase;letter-spacing:1px;}
+/* Gift modal */
+.gift-user-select{display:grid;gap:9px;max-height:260px;overflow-y:auto;margin-bottom:14px;}
+.gift-user-row{display:flex;align-items:center;gap:9px;padding:9px;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .15s;}
+.gift-user-row:hover,.gift-user-row.sel{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.4);}
+.gift-user-row.sel{box-shadow:0 0 0 1px var(--accent);}
+/* Admin tabs */
+.admin-tabs{display:flex;gap:2px;padding:4px;background:var(--bg3);border-radius:12px;margin-bottom:16px;}
+.admin-tab-btn{flex:1;padding:9px 4px;background:transparent;border:none;color:var(--text2);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.admin-tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(124,58,237,.35);}
+.admin-section{display:none;}
+.admin-section.active{display:block;}
+.admin-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.admin-stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center;}
+.admin-stat-card .av{font-size:22px;margin-bottom:4px;}
+.admin-stat-card .val{font-size:22px;font-weight:900;}
+.admin-stat-card .lbl{font-size:11px;color:var(--text2);margin-top:2px;}
+/* Admin search */
+.admin-search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-size:13px;outline:none;margin-bottom:12px;}
+.admin-search:focus{border-color:var(--accent);}
+/* Ban / restrict toggle */
+.adm-ban-btn{background:transparent;border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:7px;padding:3px 9px;font-size:10px;cursor:pointer;transition:all .15s;}
+.adm-ban-btn:hover{background:rgba(239,68,68,.1);}
+
+/* ── TICK inline ── */
+.tick-inline{position:relative;cursor:pointer;display:inline-flex;align-items:center;}
+.tick-inline .tt{position:absolute;bottom:calc(100%+5px);left:50%;transform:translateX(-50%);background:var(--bg4);color:var(--text);font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;border:1px solid var(--border);z-index:300;}
+.tick-inline:hover .tt{opacity:1;}
+/* Premium badge image next to name */
+.premium-img{width:1.8em;height:1.8em;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;margin-left:2px;display:inline-block;box-shadow:0 0 0 2px rgba(245,158,11,.5);}
+
+/* ── STORIES BAR ── */
+#stories-bar{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:11px;overflow-x:auto;scrollbar-width:none;}
+#stories-bar::-webkit-scrollbar{display:none;}
+.story-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;}
+.story-ring{width:58px;height:58px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--accent3),var(--gold));}
+.story-ring.seen{background:var(--bg4);}
+.story-av{width:100%;height:100%;border-radius:50%;background:var(--bg3);border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;overflow:hidden;}
+.story-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.story-name{font-size:11px;color:var(--text2);max-width:60px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── COMPOSER ── */
+.composer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:14px;}
+.composer-top{display:flex;gap:11px;align-items:flex-start;}
+.comp-av{width:40px;height:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0;overflow:hidden;}
+.comp-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.comp-in{flex:1;}
+.comp-in textarea{width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text);font-size:15px;min-height:58px;line-height:1.5;}
+.comp-in textarea::placeholder{color:var(--text3);}
+.comp-actions{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.ca-btn{background:transparent;border:none;color:var(--text2);font-size:18px;padding:5px;border-radius:7px;transition:all .15s;}
+.ca-btn:hover{background:var(--bg3);color:var(--accent3);}
+.post-btn{margin-right:auto;background:var(--accent);color:#fff;border:none;padding:7px 18px;border-radius:20px;font-size:14px;font-weight:700;transition:all .2s;}
+.post-btn:hover{background:var(--accent2);}
+.char-count{font-size:11px;color:var(--text3);}
+.comp-media{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;}
+.cm-wrap{position:relative;display:inline-block;}
+.cm-img{width:80px;height:80px;border-radius:8px;object-fit:cover;}
+.cm-rm{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;}
+
+/* ── POSTS ── */
+.post{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:11px;overflow:hidden;transition:border-color .15s;}
+.post:hover{border-color:var(--border2);}
+.post.pinned-post{border-color:rgba(245,158,11,.4);box-shadow:0 0 0 1px rgba(245,158,11,.15);}
+.post-header{display:flex;align-items:center;gap:9px;padding:13px 14px 9px;}
+.post-av{width:40px;height:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;cursor:pointer;overflow:hidden;position:relative;}
+.post-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.post-av .lv-ring{left:-3px;bottom:-3px;}
+.post-meta{flex:1;min-width:0;}
+.post-author{display:flex;align-items:center;gap:3px;font-weight:700;font-size:14px;cursor:pointer;flex-wrap:wrap;}
+.post-author:hover span:first-child{text-decoration:underline;}
+.post-handle{font-size:12px;color:var(--text2);}
+.post-time{font-size:11px;color:var(--text3);margin-right:auto;white-space:nowrap;}
+.post-menu-btn{background:transparent;border:none;color:var(--text3);font-size:18px;padding:3px;border-radius:5px;line-height:1;}
+.post-menu-btn:hover{background:var(--bg3);color:var(--text);}
+.post-content{padding:2px 14px 11px;}
+.post-text{font-size:14px;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
+.post-media{margin-top:9px;}
+.post-media img,.post-media video{width:100%;border-radius:9px;max-height:420px;object-fit:cover;display:block;}
+.post-actions{display:flex;padding:4px 8px 9px;border-top:1px solid var(--border);}
+.pa-btn{display:flex;align-items:center;gap:4px;background:transparent;border:none;color:var(--text2);padding:7px 10px;border-radius:7px;font-size:12px;transition:all .15s;flex:1;justify-content:center;}
+.pa-btn:hover{background:var(--bg3);}
+.pa-btn.liked{color:var(--red);}
+.pa-btn.bookmarked{color:var(--gold);}
+.pa-icon{font-size:16px;}
+/* Pin label */
+.pin-label{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gold);padding:5px 14px;border-bottom:1px solid rgba(245,158,11,.15);font-weight:600;}
+
+/* ── POLL ── */
+.poll-wrap{margin-top:10px;display:flex;flex-direction:column;gap:7px;}
+.poll-option{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s;}
+.poll-option:hover{border-color:var(--accent);}
+.poll-option.voted{border-color:var(--accent);background:rgba(124,58,237,.08);}
+.poll-bar{position:absolute;inset:0;background:rgba(124,58,237,.12);border-radius:10px;transform-origin:right;transition:width .5s ease;}
+.poll-text{position:relative;display:flex;justify-content:space-between;font-size:13px;}
+.poll-pct{color:var(--accent3);font-weight:700;}
+.poll-total{font-size:11px;color:var(--text3);margin-top:5px;}
+
+/* ── COMMENTS ── */
+.comments-section{border-top:1px solid var(--border);padding:10px 14px;}
+.comment-input-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px;}
+.comment-av{width:30px;height:30px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;overflow:hidden;}
+.comment-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.comment-iw{flex:1;background:var(--bg3);border-radius:18px;padding:7px 12px;display:flex;gap:7px;align-items:center;}
+.comment-iw input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:13px;}
+.comment-iw input::placeholder{color:var(--text3);}
+.csend{background:transparent;border:none;color:var(--accent3);font-size:15px;cursor:pointer;}
+.comment{display:flex;gap:7px;margin-bottom:9px;}
+.comment-body{flex:1;background:var(--bg3);border-radius:10px;padding:8px 10px;}
+.c-author-row{display:flex;align-items:center;gap:5px;margin-bottom:2px;}
+.c-author{font-size:12px;font-weight:700;cursor:pointer;}
+.c-time{font-size:10px;color:var(--text3);}
+.c-text{font-size:13px;color:var(--text2);line-height:1.5;}
+.c-acts{display:flex;gap:10px;margin-top:4px;}
+.c-act{background:transparent;border:none;color:var(--text3);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:2px;}
+.c-act:hover{color:var(--text2);}
+.pinned-c{border-right:2px solid var(--gold);padding-right:6px;}
+.pinned-lbl{font-size:9px;color:var(--gold);font-weight:700;margin-bottom:2px;}
+.sticker-row{display:flex;flex-wrap:wrap;gap:4px;padding:6px 0;max-height:100px;overflow-y:auto;}
+.stk-btn{font-size:20px;background:transparent;border:none;cursor:pointer;padding:3px;border-radius:5px;}
+.stk-btn:hover{background:var(--bg4);}
+
+/* ── GIF ROW (level unlocks) ── */
+.gif-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.gif-item{font-size:24px;cursor:pointer;padding:4px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);}
+.gif-item:hover{border-color:var(--accent);}
+
+/* ── PROFILE ── */
+.profile-cover{height:200px;position:relative;background:linear-gradient(135deg,var(--bg4),var(--accent2));overflow:hidden;}
+.profile-cover img{width:100%;height:100%;object-fit:cover;}
+.profile-cover-edit{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;backdrop-filter:blur(4px);}
+.profile-info{padding:0 18px 18px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.profile-av-wrap{margin-top:-46px;margin-bottom:10px;position:relative;display:inline-block;}
+.profile-av{width:90px;height:90px;border-radius:50%;background:var(--bg3);border:4px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;overflow:hidden;position:relative;}
+.profile-av img{width:100%;height:100%;object-fit:cover;}
+.profile-av-edit{position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;color:#fff;font-size:20px;}
+.profile-av-wrap:hover .profile-av-edit{opacity:1;}
+.profile-av-lv{position:absolute;bottom:-4px;left:-4px;background:#000;border:1px solid rgba(255,255,255,.2);border-radius:0 0 46px 46px;width:52px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;}
+.pname-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.pname{font-size:20px;font-weight:800;}
+.phandle{font-size:14px;color:var(--text2);}
+.pbio{font-size:14px;color:var(--text2);line-height:1.6;margin:7px 0;}
+.pstats{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.pstat{cursor:pointer;text-align:center;}
+.pstat-n{font-size:16px;font-weight:800;}
+.pstat-l{font-size:12px;color:var(--text2);}
+.pacts{display:flex;gap:7px;margin-top:13px;flex-wrap:wrap;}
+.prof-btn{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid var(--border2);background:transparent;color:var(--text);transition:all .2s;}
+.prof-btn:hover{background:var(--bg3);}
+.prof-btn.follow{background:var(--accent);color:#fff;border-color:transparent;}
+.profile-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);}
+.ptab{flex:1;padding:13px;text-align:center;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.ptab.active{color:var(--accent3);border-bottom-color:var(--accent3);}
+
+/* ── WARNING BANNER ── */
+.warn-banner{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.warn-icon{font-size:22px;}
+.warn-text{flex:1;font-size:13px;color:var(--red);line-height:1.5;}
+
+/* ── NOTIFICATIONS ── */
+.notif-item{display:flex;gap:10px;align-items:flex-start;padding:13px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.notif-item:hover{background:var(--bg2);}
+.notif-item.unread{background:rgba(124,58,237,.05);}
+.notif-icon{font-size:18px;width:34px;height:34px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.notif-text{flex:1;font-size:13px;line-height:1.5;color:var(--text2);}
+.notif-text strong{color:var(--text);}
+.notif-time{font-size:11px;color:var(--text3);}
+
+/* ── DM ── */
+#dm-panel{display:flex;height:calc(100vh - 54px);}
+.dm-list{width:300px;border-left:1px solid var(--border);overflow-y:auto;background:var(--bg2);}
+.dm-item{display:flex;gap:9px;padding:13px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;align-items:center;}
+.dm-item:hover,.dm-item.active{background:var(--bg3);}
+.dm-av{width:42px;height:42px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0;overflow:hidden;}
+.dm-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.dm-info{flex:1;min-width:0;}
+.dm-name{font-size:13px;font-weight:700;}
+.dm-last{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dm-chat{flex:1;display:flex;flex-direction:column;}
+.dm-header{padding:13px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;background:var(--bg2);}
+.dm-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;}
+.msg-row{display:flex;flex-direction:column;}
+.msg-row.mine{align-items:flex-start;}
+.msg-row.theirs{align-items:flex-end;}
+.msg-bubble{max-width:68%;padding:9px 13px;border-radius:16px;font-size:13px;line-height:1.5;}
+.msg-bubble.mine{background:var(--accent);color:#fff;border-bottom-left-radius:4px;}
+.msg-bubble.theirs{background:var(--bg3);color:var(--text);border-bottom-right-radius:4px;}
+.msg-t{font-size:10px;color:var(--text3);margin-top:2px;padding:0 3px;}
+.dm-inp-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:center;background:var(--bg2);}
+.dm-inp{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:9px 14px;color:var(--text);font-size:13px;outline:none;}
+.dm-inp:focus{border-color:var(--accent);}
+.dm-send{background:var(--accent);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:17px;display:flex;align-items:center;justify-content:center;}
+.dm-send:hover{background:var(--accent2);}
+
+/* ── ADMIN ── */
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;padding:18px;}
+.admin-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.admin-card h3{font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.ac-val{font-size:26px;font-weight:800;}
+.log-item{padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);display:flex;gap:7px;}
+.log-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:2px;}
+.log-time{color:var(--text3);flex-shrink:0;}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px;}
+.admin-table th{text-align:right;padding:9px 10px;background:var(--bg3);color:var(--text2);font-weight:600;font-size:11px;}
+.admin-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text2);}
+.admin-table tr:hover td{background:rgba(255,255,255,.015);}
+.badge{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;}
+.badge.blue{background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.25);}
+.badge.purple{background:rgba(139,92,246,.15);color:#8b5cf6;border:1px solid rgba(139,92,246,.25);}
+.badge.gold{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.25);}
+.badge.red{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.25);}
+.badge.green{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.25);}
+.badge.orange{background:rgba(249,115,22,.15);color:#f97316;border:1px solid rgba(249,115,22,.25);}
+.adm-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:3px 8px;border-radius:5px;font-size:11px;transition:all .15s;}
+.adm-btn:hover{background:var(--bg3);color:var(--text);}
+.adm-btn.danger{border-color:rgba(239,68,68,.4);color:var(--red);}
+.adm-btn.danger:hover{background:rgba(239,68,68,.1);}
+
+/* ── SETTINGS ── */
+.ss{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.ss h3{padding:14px 16px;font-size:13px;font-weight:700;border-bottom:1px solid var(--border);color:var(--text2);}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);gap:10px;}
+.sr:last-child{border-bottom:none;}
+.sr-info h4{font-size:13px;font-weight:600;margin-bottom:1px;}
+.sr-info p{font-size:11px;color:var(--text2);}
+.toggle{width:42px;height:22px;background:var(--bg4);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0;}
+.toggle.on{background:var(--accent);}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;right:3px;transition:right .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.toggle.on::after{right:calc(100% - 19px);}
+.si{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 11px;color:var(--text);font-size:13px;outline:none;min-width:150px;}
+.si:focus{border-color:var(--accent);}
+.save-btn{background:var(--accent);color:#fff;border:none;padding:8px 20px;border-radius:9px;font-size:13px;font-weight:700;transition:all .2s;}
+.save-btn:hover{background:var(--accent2);}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(5px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:460px;max-height:88vh;overflow-y:auto;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);}
+.modal-header h3{font-size:15px;font-weight:800;}
+.modal-close{background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:7px;}
+.modal-close:hover{background:var(--bg3);}
+.modal-body{padding:18px;}
+
+/* ── STORY VIEWER ── */
+#story-viewer{position:fixed;inset:0;background:#000;z-index:1000;display:none;align-items:center;justify-content:center;}
+#story-viewer.show{display:flex;}
+.sv-inner{width:100%;max-width:400px;height:100vh;position:relative;overflow:hidden;background:var(--bg3);}
+.sv-media{width:100%;height:100%;object-fit:cover;display:block;}
+.sv-bg-emoji{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:90px;}
+.sv-prog{position:absolute;top:8px;left:10px;right:10px;display:flex;gap:3px;}
+.sv-pseg{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px;overflow:hidden;}
+.sv-pfill{height:100%;background:#fff;width:0;}
+.sv-close{position:absolute;top:18px;left:10px;background:transparent;border:none;color:#fff;font-size:24px;cursor:pointer;}
+.sv-user{position:absolute;top:22px;right:10px;display:flex;align-items:center;gap:7px;}
+.sv-user-av{width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;overflow:hidden;}
+.sv-user-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.sv-user-name{color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8);}
+.sv-text{position:absolute;bottom:36px;left:0;right:0;text-align:center;color:#fff;font-size:17px;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.9);padding:0 18px;}
+
+/* ── TOASTS ── */
+#toast-wrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column;gap:7px;align-items:center;}
+.toast{background:var(--bg4);color:var(--text);padding:10px 18px;border-radius:22px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.5);border:1px solid var(--border);animation:tIn .22s ease;white-space:nowrap;}
+.toast.ok{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.1);color:var(--green);}
+.toast.err{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:var(--red);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CTX MENU ── */
+.ctx{position:fixed;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:5px;z-index:600;box-shadow:0 10px 30px rgba(0,0,0,.55);min-width:165px;display:none;}
+.ctx.show{display:block;}
+.ctx-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:7px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .12s;}
+.ctx-item:hover{background:var(--bg4);color:var(--text);}
+.ctx-item.danger{color:var(--red);}
+.ctx-item.danger:hover{background:rgba(239,68,68,.1);}
+.ctx-div{height:1px;background:var(--border);margin:3px 0;}
+
+/* ── UPDATES ── */
+.uc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
+.uc-header{background:linear-gradient(135deg,var(--bg3),var(--bg4));padding:14px 16px;border-bottom:1px solid var(--border);}
+.uc-v{font-size:10px;color:var(--accent3);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.uc-title{font-size:15px;font-weight:800;margin:3px 0;}
+.uc-date{font-size:11px;color:var(--text3);}
+.uc-items{padding:12px 16px;}
+.uc-item{display:flex;gap:9px;margin-bottom:9px;font-size:13px;}
+.ui-tag{flex-shrink:0;padding:1px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;height:fit-content;margin-top:2px;}
+.ui-tag.new{background:rgba(16,185,129,.2);color:var(--green);}
+.ui-tag.fix{background:rgba(59,130,246,.2);color:var(--blue);}
+.ui-tag.imp{background:rgba(245,158,11,.2);color:var(--gold);}
+
+/* ── EXPLORE ── */
+.suggested-user{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+
+/* ── JOB OPTIONS ── */
+.job-opt{display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;margin-bottom:7px;}
+.job-opt:hover,.job-opt.sel{border-color:var(--accent);background:rgba(124,58,237,.07);}
+.job-icon{font-size:22px;}
+.job-info h4{font-size:13px;font-weight:700;}
+.job-info p{font-size:11px;color:var(--text2);}
+
+/* ── MOBILE BOTTOM NAV ── */
+#mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--bg2);border-top:1px solid var(--border);z-index:200;align-items:stretch;justify-content:space-around;padding:0;}
+#mobile-nav.show{display:flex;}
+.mn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--text3);font-size:11px;padding:6px 2px;border:none;background:transparent;transition:color .15s;position:relative;}
+.mn-item.active{color:var(--accent3);}
+.mn-item:hover{color:var(--text);}
+.mn-ico{font-size:20px;line-height:1;}
+.mn-lbl{font-size:9px;font-weight:600;letter-spacing:.2px;}
+.mn-badge{position:absolute;top:5px;right:50%;transform:translateX(6px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:8px;min-width:15px;text-align:center;display:none;}
+.mn-badge.show{display:block;}
+/* More menu drawer */
+#mobile-more{position:fixed;bottom:60px;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:190;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);padding:8px 0 env(safe-area-inset-bottom,8px);}
+#mobile-more.open{transform:translateY(0);}
+.mm-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;color:var(--text2);font-size:14px;font-weight:500;transition:background .12s;}
+.mm-item:hover,.mm-item.active{background:var(--bg3);color:var(--text);}
+.mm-item .mm-ico{font-size:19px;width:24px;text-align:center;}
+#mobile-more-backdrop{position:fixed;inset:0;z-index:185;display:none;background:transparent;}
+#mobile-more-backdrop.show{display:block;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  #sidebar{display:none;}
+  #main-content{margin-right:0;padding-bottom:60px;}
+  #mobile-nav{display:flex;}
+  #dm-panel{flex-direction:column;}
+  .dm-list{width:100%;height:38vh;}
+  .dm-chat{height:62vh;}
+  /* topbar toast nudge */
+  #toast-wrap{bottom:72px;}
+}
+@media(max-width:600px){
+  .content-wrap{padding:10px 8px;}
+  .admin-grid{padding:10px;}
+  .profile-cover{height:140px;}
+  .shop-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+  .admin-tabs{flex-wrap:wrap;gap:4px;}
+  .admin-tab-btn{font-size:11px;padding:7px 3px;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast-wrap"></div>
+<div class="ctx" id="ctx"></div>
+
+<!-- Story Viewer -->
+<div id="story-viewer">
+  <div class="sv-inner" id="sv-inner">
+    <div id="sv-media-wrap" style="width:100%;height:100%;"></div>
+    <div class="sv-prog" id="sv-prog"></div>
+    <button class="sv-close" onclick="closeStory()">✕</button>
+    <div class="sv-user" id="sv-user"></div>
+    <div class="sv-text" id="sv-text"></div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="mod-story">
+  <div class="modal">
+    <div class="modal-header"><h3>استوری جدید</h3><button class="modal-close" onclick="closeModal('mod-story')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>متن استوری</label><textarea id="story-txt" rows="3" placeholder="چی میخوای بگی؟..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px;color:var(--text);resize:none;outline:none;"></textarea></div>
+      <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="adm-btn" onclick="storyTagUser()" style="font-size:12px;">👤 تگ پیج</button>
+        <button class="adm-btn" onclick="storyHighlight()" style="font-size:12px;">✨ هایلایت</button>
+      </div>
+      <div class="fg">
+        <label>موقعیت متن استوری</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button onclick="setStoryTextPos('top')" id="stp-top" class="adm-btn" style="font-size:12px;">⬆️ بالا</button>
+          <button onclick="setStoryTextPos('center')" id="stp-center" class="adm-btn" style="font-size:12px;background:var(--accent);color:#fff;border-color:var(--accent);">⬛ وسط</button>
+          <button onclick="setStoryTextPos('bottom')" id="stp-bottom" class="adm-btn" style="font-size:12px;">⬇️ پایین</button>
+        </div>
+      </div>
+      <div class="fg"><label>عکس یا ویدیو (اختیاری)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="adm-btn" onclick="document.getElementById('story-file').click()">📷 انتخاب فایل</button>
+          <span id="story-file-name" style="font-size:12px;color:var(--text2);">انتخاب نشده</span>
+        </div>
+        <input type="file" id="story-file" accept="image/*,video/*" style="display:none" onchange="onStoryFile(event)"/>
+      </div>
+      <div class="fg"><label>ایموجی پس‌زمینه</label><input id="story-emoji" placeholder="😊" style="width:70px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px;color:var(--text);font-size:22px;text-align:center;outline:none;"/></div>
+      <button class="auth-btn" onclick="createStory()">انتشار استوری</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mod-upgrade">
+  <div class="modal">
+    <div class="modal-header"><h3>درخواست ارتقاء حساب</h3><button class="modal-close" onclick="closeModal('mod-upgrade')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">شغل خود را انتخاب کنید:</p>
+      <div id="job-opts"></div>
+      <div class="fg" style="margin-top:10px;"><label>توضیحات</label><textarea id="upgrade-note" rows="2" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);resize:none;outline:none;font-size:13px;"></textarea></div>
+      <button class="auth-btn" onclick="submitUpgrade()">ارسال درخواست</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mod-poll">
+  <div class="modal">
+    <div class="modal-header"><h3>نظرسنجی جدید</h3><button class="modal-close" onclick="closeModal('mod-poll')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>سوال نظرسنجی</label><input id="poll-q" placeholder="سوال شما..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);outline:none;"/></div>
+      <div id="poll-opts-wrap">
+        <div class="fg"><label>گزینه ۱</label><input class="poll-opt-in" placeholder="گزینه ۱" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px;color:var(--text);outline:none;"/></div>
+        <div class="fg"><label>گزینه ۲</label><input class="poll-opt-in" placeholder="گزینه ۲" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px;color:var(--text);outline:none;"/></div>
+      </div>
+      <button class="adm-btn" onclick="addPollOpt()" style="margin-bottom:12px;">+ افزودن گزینه</button>
+      <button class="auth-btn" onclick="publishPoll()">انتشار نظرسنجی</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mod-location">
+  <div class="modal">
+    <div class="modal-header"><h3>اشتراک موقعیت</h3><button class="modal-close" onclick="closeModal('mod-location')">✕</button></div>
+    <div class="modal-body">
+      <div style="background:var(--bg3);border-radius:10px;padding:18px;text-align:center;margin-bottom:14px;">
+        <div style="font-size:48px;margin-bottom:8px;">🗺️</div>
+        <p id="loc-text" style="font-size:13px;color:var(--text2);">در حال دریافت...</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="auth-btn" onclick="confirmLoc()" style="flex:1;">اشتراک‌گذاری</button>
+        <button onclick="closeModal('mod-location')" style="padding:12px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:9px;font-size:13px;">لغو</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="screen active" id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo"><div class="logo-n">Cube</div><p>شبکه اجتماعی نسل بعد — بتا</p></div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">ورود</button>
+      <button class="auth-tab" onclick="switchTab('register')">ثبت‌نام</button>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+    <div id="login-form">
+      <div class="fg"><label>نام کاربری یا ایمیل</label><input id="l-user" type="text" placeholder="@username"/></div>
+      <div class="fg"><label>رمز عبور</label><input id="l-pass" type="password" placeholder="••••••••"/></div>
+      <button class="auth-btn" onclick="doLogin()">ورود به Cube</button>
+    </div>
+    <div id="reg-form" style="display:none;">
+      <div class="fg"><label>نام کامل</label><input id="r-name" placeholder="نام شما"/></div>
+      <div class="fg"><label>نام کاربری</label><input id="r-user" placeholder="@username"/></div>
+      <div class="fg"><label>ایمیل</label><input id="r-email" type="email" placeholder="email@example.com"/></div>
+      <div class="fg"><label>رمز عبور</label><input id="r-pass" type="password" placeholder="حداقل ۶ کاراکتر"/></div>
+      <button class="auth-btn" onclick="doRegister()">ساخت حساب</button>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--text3);margin-top:14px;">© 2025 Cube. All Rights Reserved.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="app-screen">
+  <div id="sidebar">
+    <div class="sidebar-logo"><div class="sln">Cube</div><span class="beta-badge">بتا</span></div>
+    <div class="nav-sec">
+      <div class="nav-lbl">منو</div>
+      <div class="nav-item active" id="nav-feed" onclick="showPage('feed')"><span class="ni-ico">🏠</span>خانه</div>
+      <div class="nav-item" id="nav-explore" onclick="showPage('explore')"><span class="ni-ico">🔍</span>کاوش</div>
+      <div class="nav-item" id="nav-notifs" onclick="showPage('notifs')"><span class="ni-ico">🔔</span>اعلان‌ها<span class="ni-badge" id="notif-badge" style="display:none">0</span></div>
+      <div class="nav-item" id="nav-dm" onclick="showPage('dm')"><span class="ni-ico">💬</span>پیام‌ها</div>
+      <div class="nav-item" id="nav-updates" onclick="showPage('updates')"><span class="ni-ico">🆕</span>آپدیت‌های هفتگی</div>
+    </div>
+    <div class="nav-sec">
+      <div class="nav-lbl">حساب</div>
+      <div class="nav-item" id="nav-profile" onclick="showPage('profile')"><span class="ni-ico">👤</span>پروفایل</div>
+      <div class="nav-item" id="nav-settings" onclick="showPage('settings')"><span class="ni-ico">⚙️</span>تنظیمات</div>
+      <div class="nav-item" id="nav-upgrade" onclick="showPage('upgrade')"><span class="ni-ico">⭐</span>ارتقاء</div>
+      <div class="nav-item" id="nav-shop" onclick="showPage('shop')"><span class="ni-ico">🏪</span>فروشگاه</div>
+      <div class="nav-item" id="nav-admin" style="display:none" onclick="showPage('admin')"><span class="ni-ico">🛡️</span>پنل مدیر</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="su-card" onclick="showPage('profile')">
+        <div class="su-av" id="sb-av" style="background:var(--accent)">C</div>
+        <div class="su-info">
+          <div class="su-name" id="sb-name">کاربر</div>
+          <div class="su-handle" id="sb-handle">@user</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="topbar">
+      <div class="topbar-title" id="topbar-title">خانه</div>
+      <div class="topbar-actions">
+        <button class="tb-btn" onclick="openModal('mod-story')">+ استوری</button>
+        <button class="tb-btn primary" onclick="scrollToComposer()">+ پست</button>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div id="page-feed" class="page-content">
+      <div id="stories-bar">
+        <div class="story-item" onclick="openModal('mod-story')">
+          <div class="story-ring" style="background:var(--bg4);">
+            <div class="story-av" id="my-story-av" style="background:var(--bg3);">+</div>
+          </div>
+          <span class="story-name">استوری تو</span>
+        </div>
+        <div id="stories-list" style="display:contents;"></div>
+      </div>
+      <div class="content-wrap">
+        <div id="warn-area"></div>
+        <div class="composer" id="composer">
+          <div class="composer-top">
+            <div class="comp-av" id="comp-av">N</div>
+            <div class="comp-in">
+              <textarea id="post-txt" placeholder="چه اتفاقی افتاده؟..." maxlength="500" oninput="updateCC()"></textarea>
+              <div class="comp-media" id="comp-media"></div>
+            </div>
+          </div>
+          <div class="comp-actions">
+            <button class="ca-btn" title="عکس" onclick="document.getElementById('img-up').click()">🖼️</button>
+            <button class="ca-btn" title="ویدیو" onclick="document.getElementById('vid-up').click()">🎥</button>
+            <button class="ca-btn" title="موقعیت" onclick="shareLocation()">📍</button>
+            <button class="ca-btn" title="نظرسنجی" onclick="openModal('mod-poll')">📊</button>
+            <button class="ca-btn" title="گروه/تگ" onclick="addTag()">👥</button>
+            <span class="char-count" id="cc">0/500</span>
+            <button class="post-btn" onclick="publishPost()">انتشار</button>
+          </div>
+          <input type="file" id="img-up" accept="image/*" style="display:none" onchange="handleImg(event)"/>
+          <input type="file" id="vid-up" accept="video/*" style="display:none" onchange="handleVid(event)"/>
+        </div>
+        <div id="posts-feed"></div>
+      </div>
+    </div>
+
+    <!-- EXPLORE -->
+    <div id="page-explore" class="page-content" style="display:none;">
+      <div class="content-wrap">
+        <input type="text" id="search-in" placeholder="🔍  جستجو..." oninput="doSearch()" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:11px 16px;color:var(--text);font-size:14px;outline:none;margin-bottom:14px;"/>
+        <div id="search-results"></div>
+        <h3 style="font-size:13px;color:var(--text2);margin:14px 0 9px;font-weight:700;">📈 ترند امروز</h3>
+        <div id="trend-tags"></div>
+        <h3 style="font-size:13px;color:var(--text2);margin:14px 0 9px;font-weight:700;">👥 پیشنهادی</h3>
+        <div id="sug-users"></div>
+      </div>
+    </div>
+
+    <!-- NOTIFS -->
+    <div id="page-notifs" class="page-content" style="display:none;"><div id="notifs-list"></div></div>
+
+    <!-- DM -->
+    <div id="page-dm" class="page-content" style="display:none;padding:0;">
+      <div id="dm-panel">
+        <div class="dm-list" id="dm-list"></div>
+        <div class="dm-chat" id="dm-chat">
+          <div style="display:flex;align-items:center;justify-content:center;flex:1;color:var(--text3);flex-direction:column;gap:7px;">
+            <span style="font-size:44px;">💬</span><span>یک مکالمه انتخاب کن</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="page-profile" class="page-content" style="display:none;"><div id="profile-content"></div></div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="page-content" style="display:none;">
+      <div class="content-wrap">
+        <div class="ss"><h3>پروفایل</h3>
+          <div class="sr"><div class="sr-info"><h4>عکس پروفایل</h4><p>عکس نمایشی شما</p></div><button class="adm-btn" onclick="document.getElementById('av-up').click()">📷 آپلود</button><input type="file" id="av-up" accept="image/*" style="display:none" onchange="uploadAvatar(event)"/></div>
+          <div class="sr"><div class="sr-info"><h4>عکس بنر</h4><p>بنر پروفایل</p></div><button class="adm-btn" onclick="document.getElementById('cover-up').click()">🖼️ آپلود</button><input type="file" id="cover-up" accept="image/*" style="display:none" onchange="uploadCover(event)"/></div>
+          <div class="sr"><div class="sr-info"><h4>نام کامل</h4></div><input class="si" id="set-name" placeholder="نام"/></div>
+          <div class="sr"><div class="sr-info"><h4>نام کاربری</h4></div><input class="si" id="set-username" placeholder="@username"/></div>
+          <div class="sr"><div class="sr-info"><h4>بیوگرافی</h4></div><input class="si" id="set-bio" placeholder="درباره‌ات..."/></div>
+          <div class="sr" style="border-bottom:none;"><div></div><button class="save-btn" onclick="saveSettings()">ذخیره</button></div>
+        </div>
+        <div class="ss" id="premium-badge-section" style="display:none;"><h3>💎 بج پرمیوم (کنار نام)</h3>
+          <div class="sr"><div class="sr-info"><h4>عکس کوچک کنار نام</h4><p>فقط برای حساب‌های طلایی</p></div><button class="adm-btn" onclick="document.getElementById('badge-img-up').click()">📷 آپلود</button><input type="file" id="badge-img-up" accept="image/*" style="display:none" onchange="uploadBadgeImg(event)"/><div id="badge-img-preview" style="margin-right:8px;"></div></div>
+        </div>
+        <div class="ss"><h3>حریم خصوصی</h3>
+          <div class="sr"><div class="sr-info"><h4>حساب خصوصی</h4></div><button class="toggle" id="tog-private" onclick="toggleS('private')"></button></div>
+          <div class="sr"><div class="sr-info"><h4>کامنت پیش‌فرض</h4></div><button class="toggle on" id="tog-comments" onclick="toggleS('comments')"></button></div>
+          <div class="sr" style="border-bottom:none;"><div class="sr-info"><h4>وضعیت آنلاین</h4></div><button class="toggle on" id="tog-online" onclick="toggleS('online')"></button></div>
+        </div>
+        <div class="ss"><h3>امنیت</h3>
+          <div class="sr"><div class="sr-info"><h4>رمز جدید</h4></div><input class="si" type="password" id="set-pass" placeholder="رمز جدید"/></div>
+          <div class="sr" style="border-bottom:none;"><div class="sr-info"><h4>خروج از همه دستگاه‌ها</h4></div><button class="adm-btn danger" onclick="logoutAll()">خروج</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPGRADE -->
+    <div id="page-upgrade" class="page-content" style="display:none;">
+      <div class="content-wrap">
+        <div style="text-align:center;padding:28px 0 18px;">
+          <div style="font-size:46px;margin-bottom:10px;">⭐</div>
+          <h2 style="font-size:20px;font-weight:800;margin-bottom:7px;">ارتقاء حساب</h2>
+          <p style="color:var(--text2);font-size:13px;line-height:1.7;">تیک تأیید دریافت کن و به جامعه Cube بپیوند</p>
+        </div>
+        <div style="display:grid;gap:12px;margin-bottom:18px;">
+          <div style="background:var(--bg2);border:1px solid rgba(59,130,246,.3);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;"><span style="font-size:28px;">✅</span><div><h3 style="font-size:14px;color:var(--blue);">تیک آبی</h3><p style="font-size:12px;color:var(--text2);margin-top:2px;">حساب رسمی تأیید شده</p></div></div>
+          <div style="background:var(--bg2);border:1px solid rgba(139,92,246,.3);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;"><span style="font-size:28px;">🔮</span><div><h3 style="font-size:14px;color:var(--accent3);">تیک بنفش</h3><p style="font-size:12px;color:var(--text2);margin-top:2px;">تیم سازنده / برنامه‌نویس</p></div></div>
+          <div style="background:var(--bg2);border:1px solid rgba(245,158,11,.3);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;"><span style="font-size:28px;">💎</span><div><h3 style="font-size:14px;color:var(--gold);">تیک طلایی</h3><p style="font-size:12px;color:var(--text2);margin-top:2px;">حساب پرمیوم — ویژگی‌های انحصاری</p></div></div>
+        </div>
+        <button class="auth-btn" onclick="openModal('mod-upgrade')">ارسال درخواست</button>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="page-admin" class="page-content" style="display:none;">
+      <div style="padding:14px 18px 0;">
+        <div class="admin-tabs">
+          <button class="admin-tab-btn active" onclick="switchAdminTab('overview')">📊 آمار</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('users')">👤 کاربران</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('posts')">📝 پست‌ها</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('reqs')">⭐ درخواست‌ها</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('log')">📋 لاگ</button>
+        </div>
+
+        <!-- Overview tab -->
+        <div class="admin-section active" id="admtab-overview">
+          <div class="admin-stat-grid">
+            <div class="admin-stat-card"><div class="av">👤</div><div class="val" id="adm-u-cnt" style="color:var(--blue);">0</div><div class="lbl">کاربران</div></div>
+            <div class="admin-stat-card"><div class="av">📝</div><div class="val" id="adm-p-cnt" style="color:var(--accent3);">0</div><div class="lbl">پست‌ها</div></div>
+            <div class="admin-stat-card"><div class="av">🟢</div><div class="val" style="color:var(--green);">1</div><div class="lbl">آنلاین</div></div>
+            <div class="admin-stat-card"><div class="av">⭐</div><div class="val" id="adm-req-cnt" style="color:var(--gold);">0</div><div class="lbl">درخواست</div></div>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text2);">📈 لاگ زنده</h3>
+            <div id="adm-log" style="max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+        <!-- Users tab -->
+        <div class="admin-section" id="admtab-users">
+          <input class="admin-search" id="admin-user-search" placeholder="🔍 جستجوی کاربر..." oninput="filterAdminUsers()"/>
+          <div style="overflow-x:auto;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);">
+            <table class="admin-table" style="min-width:700px;">
+              <thead><tr><th>کاربر</th><th>لول</th><th>تیک</th><th>اخطار</th><th>رمز</th><th>پست</th><th>عملیات</th></tr></thead>
+              <tbody id="adm-users-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Posts tab -->
+        <div class="admin-section" id="admtab-posts">
+          <input class="admin-search" id="admin-post-search" placeholder="🔍 جستجوی پست..." oninput="filterAdminPosts()"/>
+          <div id="adm-posts-list" style="display:flex;flex-direction:column;gap:9px;"></div>
+        </div>
+
+        <!-- Requests tab -->
+        <div class="admin-section" id="admtab-reqs">
+          <div id="adm-upgrade-reqs"></div>
+        </div>
+
+        <!-- Log tab -->
+        <div class="admin-section" id="admtab-log">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h3 style="font-size:13px;font-weight:700;color:var(--text2);">📋 تاریخچه لاگ</h3>
+              <button onclick="clearAdminLog()" style="background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;">پاک کردن</button>
+            </div>
+            <div id="adm-log-full" style="max-height:400px;overflow-y:auto;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATES -->
+    <div id="page-updates" class="page-content" style="display:none;"><div class="content-wrap" id="updates-wrap"></div></div>
+
+    <!-- SHOP -->
+    <div id="page-shop" class="page-content" style="display:none;">
+      <div class="content-wrap">
+        <!-- Banner -->
+        <div class="shop-banner">
+          <div class="shop-banner-title">🏪 فروشگاه Cube</div>
+          <div class="shop-banner-sub">آیتم‌های ویژه بخر و به دوستانت هدیه بده</div>
+          <div class="shop-balance">💎 موجودی شما: <span id="shop-balance-lv">—</span> لول</div>
+        </div>
+
+        <!-- Gifts section -->
+        <div class="shop-section-title">🎁 هدایای پست</div>
+        <div class="shop-grid" id="shop-gifts-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- Profile items section -->
+        <div class="shop-section-title">✨ آیتم‌های پروفایل</div>
+        <div class="shop-grid" id="shop-profile-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <p style="text-align:center;font-size:11px;color:var(--text3);padding:10px 0 4px;">🔒 آیتم‌های بیشتر به زودی...</p>
+      </div>
+    </div>
+
+    <!-- Gift To User Modal (inside body) -->
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav id="mobile-nav">
+  <button class="mn-item active" id="mn-feed" onclick="showPage('feed');closeMobileMore()">
+    <span class="mn-ico">🏠</span><span class="mn-lbl">خانه</span>
+  </button>
+  <button class="mn-item" id="mn-explore" onclick="showPage('explore');closeMobileMore()">
+    <span class="mn-ico">🔍</span><span class="mn-lbl">کاوش</span>
+  </button>
+  <button class="mn-item" id="mn-shop" onclick="showPage('shop');closeMobileMore()">
+    <span class="mn-ico">🏪</span><span class="mn-lbl">فروشگاه</span>
+  </button>
+  <button class="mn-item" id="mn-notifs" onclick="showPage('notifs');closeMobileMore()">
+    <span class="mn-ico">🔔</span><span class="mn-lbl">اعلان‌ها</span>
+    <span class="mn-badge" id="mn-notif-badge">0</span>
+  </button>
+  <button class="mn-item" id="mn-more" onclick="toggleMobileMore()">
+    <span class="mn-ico">☰</span><span class="mn-lbl">بیشتر</span>
+  </button>
+</nav>
+
+<!-- MOBILE MORE DRAWER -->
+<div id="mobile-more-backdrop" onclick="closeMobileMore()"></div>
+<div id="mobile-more">
+  <div class="mm-item" id="mm-dm" onclick="showPage('dm');closeMobileMore()"><span class="mm-ico">💬</span>پیام‌ها</div>
+  <div class="mm-item" id="mm-profile" onclick="showPage('profile');closeMobileMore()"><span class="mm-ico">👤</span>پروفایل</div>
+  <div class="mm-item" id="mm-settings" onclick="showPage('settings');closeMobileMore()"><span class="mm-ico">⚙️</span>تنظیمات</div>
+  <div class="mm-item" id="mm-upgrade" onclick="showPage('upgrade');closeMobileMore()"><span class="mm-ico">⭐</span>ارتقاء</div>
+  <div class="mm-item" id="mm-updates" onclick="showPage('updates');closeMobileMore()"><span class="mm-ico">🆕</span>آپدیت‌ها</div>
+  <div class="mm-item" id="mm-admin" style="display:none" onclick="showPage('admin');closeMobileMore()"><span class="mm-ico">🛡️</span>پنل مدیر</div>
+</div>
+
+<!-- GIFT MODAL -->
+<div id="gift-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:700;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);" onclick="if(event.target===this)closeGiftModal()">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:400px;overflow:hidden;">
+    <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <h3 id="gift-modal-title" style="font-size:16px;font-weight:800;">هدیه بده 🎁</h3>
+      <button onclick="closeGiftModal()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:18px;">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">به کدام کاربر هدیه بدی؟</p>
+      <div class="gift-user-select" id="gift-user-list"></div>
+      <button onclick="confirmGiftSend()" style="width:100%;padding:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">ارسال هدیه 🎁</button>
+    </div>
+  </div>
+</div>
+
+<div id="PLACEHOLDER_END_REMOVED"></div>
+
+<script>
+/* © 2025 Cube — All Rights Reserved */
+(function(){
+'use strict';
+
+/* ── OWNER CONFIG (obfuscated) ── */
+const _o=atob('SmFtZXNE'); // JamesD
+function _dp(b){try{return new TextDecoder().decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0)));}catch{return atob(b);}}
+const _op=_dp('5pWs6JmU55qE'); // obfuscated
+
+/* ── DB ── */
+const DB={
+  get(k){try{return JSON.parse(localStorage.getItem('cube_'+k)||'null');}catch{return null;}},
+  set(k,v){localStorage.setItem('cube_'+k,JSON.stringify(v));},
+  del(k){localStorage.removeItem('cube_'+k);}
+};
+
+/* ── SEED ── */
+function seed(){
+  if(DB.get('seeded')) return;
+  DB.set('users',[]);
+  DB.set('posts',[]);
+  DB.set('stories',[]);
+  DB.set('dms',{});
+  DB.set('notifs',{});
+  DB.set('upgrade_reqs',[]);
+  DB.set('pinned_post',null);
+  DB.set('seeded',true);
+}
+seed();
+
+/* ── LEVEL SYSTEM ── */
+const MAX_LEVEL=20;
+const LEVEL_GIFS={
+  1:['😊','👍','❤️'],
+  5:['🔥','💯','🎉','✨','😎'],
+  10:['🌟','💫','🏆','🎊','🚀','💎','🦋'],
+  15:['🌈','⚡','🔮','👑','🌺','🎭','💜','🫶'],
+  20:['🏅','🥇','⭐','🌟','✨','🎯','💥','🌠','🎪','🦄'],
+};
+function getGifsForLevel(lv){
+  let gifs=[];
+  const keys=Object.keys(LEVEL_GIFS).map(Number).sort((a,b)=>a-b);
+  for(const k of keys){if(lv>=k)gifs=[...gifs,...LEVEL_GIFS[k]];}
+  return [...new Set(gifs)];
+}
+
+/* ── STATE ── */
+let ME=null;
+let curPage='feed';
+let pPost={text:'',image:null,video:null,location:null,poll:null};
+let curDMUser=null;
+let selJob=null;
+let storyFileData=null;
+let storyTextPos='center'; // top | center | bottom
+
+window.storyTagUser=function(){
+  const q=prompt('نام کاربری پیج برای تگ کردن:');
+  if(!q)return;
+  const u=getUsers().find(x=>x.username===q.replace('@',''));
+  if(!u){toast('کاربر یافت نشد','err');return;}
+  const t=document.getElementById('story-txt');
+  t.value+=' @'+u.username;
+  toast('✅ '+u.name+' تگ شد');
+};
+window.storyHighlight=function(){
+  const t=document.getElementById('story-txt');
+  const start=t.selectionStart; const end=t.selectionEnd;
+  if(start===end){toast('ابتدا متنی را انتخاب کن','err');return;}
+  const sel=t.value.slice(start,end);
+  t.value=t.value.slice(0,start)+'✨'+sel+'✨'+t.value.slice(end);
+  toast('✨ هایلایت شد');
+};
+window.setStoryTextPos=function(pos){
+  storyTextPos=pos;
+  ['top','center','bottom'].forEach(p=>{
+    const el=document.getElementById('stp-'+p);
+    if(!el)return;
+    el.style.background=p===pos?'var(--accent)':'';
+    el.style.color=p===pos?'#fff':'';
+    el.style.borderColor=p===pos?'var(--accent)':'';
+  });
+};
+let logInt=null;
+
+/* ── HELPERS ── */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function timeAgo(ts){
+  const d=(Date.now()-ts)/1000;
+  if(d<60) return 'همین الان';
+  if(d<3600) return Math.floor(d/60)+'د';
+  if(d<86400) return Math.floor(d/3600)+'س';
+  return Math.floor(d/86400)+'ر';
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function toast(msg,type=''){
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');el.textContent=msg;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+function addLog(msg){
+  const log=document.getElementById('adm-log');if(!log)return;
+  const el=document.createElement('div');el.className='log-item';
+  el.innerHTML=`<div class="log-dot"></div><span class="log-time">${new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}</span><span>${esc(msg)}</span>`;
+  log.prepend(el);
+  while(log.children.length>60)log.removeChild(log.lastChild);
+}
+
+function getUsers(){return DB.get('users')||[];}
+function getPosts(){return DB.get('posts')||[];}
+function getUser(id){return getUsers().find(u=>u.id===id)||null;}
+function saveUsers(u){DB.set('users',u);}
+function savePosts(p){DB.set('posts',p);}
+
+const COLORS=['#7c3aed','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#8b5cf6','#f97316','#84cc16'];
+
+/* ── TICK HTML ── */
+function ticksHTML(user){
+  if(!user) return '';
+  let html='';
+  const ticks=Array.isArray(user.ticks)?user.ticks:(user.tick?[user.tick]:[]);
+  const map={blue:{icon:'✅',tip:'حساب کاربری رسمی می‌باشد'},purple:{icon:'🔮',tip:'تیم سازنده / برنامه‌نویس'},gold:{icon:'💎',tip:'حساب کاربری پرمیوم'}};
+  ticks.forEach(t=>{
+    if(!map[t])return;
+    html+=`<span class="tick-inline" style="font-size:14px;"><span>${map[t].icon}</span><span class="tt">${map[t].tip}</span></span>`;
+  });
+  // Premium badge image
+  if(ticks.includes('gold')&&user.badgeImg){
+    html+=`<img src="${esc(user.badgeImg)}" class="premium-img" title="بج پرمیوم"/>`;
+  }
+  return html;
+}
+
+/* ── LEVEL BADGE HTML ── */
+function lvBadgeHTML(user,sz=40){
+  const lv=user.level||1;
+  return `<div class="lv-ring"><span>${lv}</span></div>`;
+}
+
+/* ── LEVEL FRAME CLASS ── */
+function lvFrameClass(lv){
+  if(lv>=20)return 'av-frame-rainbow';
+  if(lv>=15)return 'av-frame-gold';
+  if(lv>=10)return 'av-frame-purple';
+  if(lv>=5) return 'av-frame-blue';
+  return 'av-frame-grey';
+}
+
+/* ── AVATAR HTML ── */
+function avHTML(user,sz=40,extraStyle=''){
+  const initials=(user.name||'?').slice(0,2).toUpperCase();
+  const bg=user.color||'var(--accent)';
+  const frameClass=lvFrameClass(user.level||1);
+  if(user.avatarImg){
+    return `<div class="${frameClass}" style="width:${sz}px;height:${sz}px;border-radius:50%;overflow:hidden;flex-shrink:0;position:relative;cursor:pointer;${extraStyle}"><img src="${esc(user.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>${lvBadgeHTML(user,sz)}</div>`;
+  }
+  return `<div class="${frameClass}" style="width:${sz}px;height:${sz}px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-size:${sz*.38}px;font-weight:700;flex-shrink:0;position:relative;cursor:pointer;${extraStyle}">${initials}${lvBadgeHTML(user,sz)}</div>`;
+}
+
+/* ── WARN CHECK ── */
+function getWarnLevel(user){return user.warnLevel||0;}
+function canStory(user){if(user.role==='owner')return true;return (user.warnLevel||0)<1;}
+function canPost(user){if(user.role==='owner')return true;return (user.warnLevel||0)<2;}
+function canInteract(user){if(user.role==='owner')return true;return (user.warnLevel||0)<3;}
+
+/* ── AUTH ── */
+window.switchTab=function(tab){
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',i===(tab==='login'?0:1)));
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('reg-form').style.display=tab==='register'?'block':'none';
+  document.getElementById('auth-err').classList.remove('show');
+};
+
+function showErr(m){const e=document.getElementById('auth-err');e.textContent=m;e.classList.add('show');}
+
+window.doLogin=function(){
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value;
+  if(!u||!p){showErr('همه فیلدها الزامی');return;}
+
+  // Owner check — JamesD
+  if(u===_o||u.toLowerCase()===_o.toLowerCase()){
+    if(p!==_op){showErr('رمز اشتباه');return;}
+    let users=getUsers();
+    let ownerIdx=users.findIndex(x=>x.username===_o||x.username===_o.toLowerCase());
+    const ownerBase={
+      username:_o,name:'JamesD',email:'jamesd@n.net',
+      password:'***HIDDEN***',
+      bio:'مالک و مدیر اصلی Cube 👑',
+      ticks:['blue','purple','gold'],
+      color:'#7c3aed',
+      avatarImg:ownerIdx>=0?users[ownerIdx].avatarImg:null,
+      coverImg:ownerIdx>=0?users[ownerIdx].coverImg:null,
+      badgeImg:ownerIdx>=0?users[ownerIdx].badgeImg:null,
+      followers:ownerIdx>=0?(users[ownerIdx].followers||[]):[],
+      following:ownerIdx>=0?(users[ownerIdx].following||[]):[],
+      joinDate:ownerIdx>=0?(users[ownerIdx].joinDate||Date.now()):Date.now(),
+      role:'owner',level:MAX_LEVEL,
+      settings:{private:false,comments:true,online:true},
+      warnLevel:0
+    };
+    if(ownerIdx>=0){
+      ownerBase.id=users[ownerIdx].id;
+      users[ownerIdx]={...users[ownerIdx],...ownerBase};
+    } else {
+      ownerBase.id=uid();
+      users.push(ownerBase);
+    }
+    saveUsers(users);
+    ME=ownerIdx>=0?users[ownerIdx]:ownerBase;
+    DB.set('session',ME.id);
+    addLog('JamesD (مالک) وارد شد');
+    startApp();return;
+  }
+
+  const found=getUsers().find(x=>(x.username===u||x.email===u)&&x.password===p);
+  if(!found){showErr('نام کاربری یا رمز اشتباه');return;}
+  ME=found;DB.set('session',ME.id);
+  addLog(ME.name+' وارد شد');
+  startApp();
+};
+
+window.doRegister=function(){
+  const name=document.getElementById('r-name').value.trim();
+  const username=document.getElementById('r-user').value.trim().replace('@','').toLowerCase();
+  const email=document.getElementById('r-email').value.trim();
+  const pass=document.getElementById('r-pass').value;
+  if(!name||!username||!email||!pass){showErr('همه فیلدها الزامی');return;}
+  if(username.length<3){showErr('نام کاربری حداقل ۳ حرف');return;}
+  if(pass.length<6){showErr('رمز حداقل ۶ حرف');return;}
+  if(username===_o){showErr('این نام کاربری در دسترس نیست');return;}
+  const users=getUsers();
+  if(users.find(x=>x.username===username)){showErr('این نام کاربری قبلاً گرفته شده');return;}
+  if(users.find(x=>x.email===email)){showErr('این ایمیل قبلاً ثبت شده');return;}
+  const nu={id:uid(),username,name,email,password:pass,bio:'',
+    ticks:[],color:COLORS[users.length%COLORS.length],
+    avatarImg:null,coverImg:null,badgeImg:null,
+    followers:[],following:[],joinDate:Date.now(),role:'user',level:1,
+    settings:{private:false,comments:true,online:true},warnLevel:0};
+  users.push(nu);saveUsers(users);
+  ME=nu;DB.set('session',ME.id);
+  addLog(ME.name+' ثبت‌نام کرد');
+  startApp();
+};
+
+/* ── APP START ── */
+function startApp(){
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  updateSidebar();
+  if(ME.role==='owner'||ME.role==='admin'){
+    document.getElementById('nav-admin').style.display='flex';
+    // Show admin in mobile more drawer
+    const mmAdmin=document.getElementById('mm-admin');
+    if(mmAdmin)mmAdmin.style.display='flex';
+  }
+  if(ME.ticks?.includes('gold')){document.getElementById('premium-badge-section').style.display='block';}
+  showPage('feed');
+  if(logInt)clearInterval(logInt);
+  logInt=setInterval(()=>{
+    const msgs=['سرور پاسخ داد ۲۰۰ OK','کش به‌روز شد','Socket فعال','ایندکس آپدیت شد','CDN sync شد'];
+    addLog(msgs[Math.floor(Math.random()*msgs.length)]);
+  },9000);
+}
+
+function updateSidebar(){
+  document.getElementById('sb-name').textContent=ME.name;
+  document.getElementById('sb-handle').textContent='@'+ME.username;
+  const sav=document.getElementById('sb-av');
+  if(ME.avatarImg){sav.innerHTML=`<img src="${esc(ME.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;sav.style.background='';}
+  else{sav.textContent=(ME.name||'N').slice(0,2).toUpperCase();sav.style.background=ME.color||'var(--accent)';}
+}
+
+/* ── PAGES ── */
+window.showPage=function(p){
+  document.querySelectorAll('.page-content').forEach(x=>x.style.display='none');
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  const nav=document.getElementById('nav-'+p);if(nav)nav.classList.add('active');
+  curPage=p;
+  const titles={feed:'خانه',explore:'کاوش',notifs:'اعلان‌ها',dm:'پیام‌ها',profile:'پروفایل',settings:'تنظیمات',upgrade:'ارتقاء',admin:'پنل مدیر',shop:'فروشگاه',updates:'آپدیت‌ها'};
+  document.getElementById('topbar-title').textContent=titles[p]||p;
+  document.getElementById('page-'+p).style.display='block';
+  // ── Mobile nav active state ──
+  const mnMap={feed:'mn-feed',explore:'mn-explore',shop:'mn-shop',notifs:'mn-notifs'};
+  document.querySelectorAll('.mn-item').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.mm-item').forEach(x=>x.classList.remove('active'));
+  if(mnMap[p]){const el=document.getElementById(mnMap[p]);if(el)el.classList.add('active');}
+  else{const el=document.getElementById('mn-more');if(el)el.classList.add('active');
+       const mel=document.getElementById('mm-'+p);if(mel)mel.classList.add('active');}
+  if(p==='feed')renderFeed();
+  else if(p==='explore')renderExplore();
+  else if(p==='notifs')renderNotifs();
+  else if(p==='dm')renderDMList();
+  else if(p==='profile')renderProfile(ME.id);
+  else if(p==='settings')loadSettings();
+  else if(p==='admin')renderAdmin();
+  else if(p==='updates')renderUpdates();
+  else if(p==='upgrade')renderUpgrade();
+  else if(p==='shop')renderShop();
+};
+
+/* ── FEED ── */
+function renderFeed(){
+  renderStories();
+  renderWarnArea();
+  // Composer avatar
+  const ca=document.getElementById('comp-av');
+  if(ME.avatarImg){ca.innerHTML=`<img src="${esc(ME.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;ca.style.background='';}
+  else{ca.textContent=(ME.name||'N').slice(0,2).toUpperCase();ca.style.background=ME.color||'var(--accent)';}
+  // My story av
+  const msa=document.getElementById('my-story-av');
+  if(ME.avatarImg){msa.innerHTML=`<img src="${esc(ME.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;msa.style.background='';}
+  else{msa.textContent='+';msa.style.background='var(--bg3)';}
+
+  const feed=document.getElementById('posts-feed');feed.innerHTML='';
+  let posts=[...getPosts()];
+  const pinnedId=DB.get('pinned_post');
+
+  // Pinned first
+  const pinned=posts.find(p=>p.id===pinnedId);
+  const others=posts.filter(p=>p.id!==pinnedId).reverse();
+  const ordered=pinned?[pinned,...others]:others;
+
+  if(!ordered.length){
+    feed.innerHTML='<div style="text-align:center;padding:38px;color:var(--text3);">هنوز پستی نیست ✨</div>';
+    return;
+  }
+  ordered.forEach(p=>{feed.innerHTML+=buildPost(p);});
+}
+
+function renderWarnArea(){
+  const wa=document.getElementById('warn-area');if(!wa)return;
+  const wl=getWarnLevel(ME);
+  if(wl===0){wa.innerHTML='';return;}
+  const msgs={
+    1:'⚠️ اخطار اول — استوری گذاشتن غیرفعال شده تا زمان رفع اخطار.',
+    2:'⛔ اخطار دوم — پست و استوری گذاشتن غیرفعال شده.',
+    3:'🚫 اخطار سوم — حساب شما فقط در حالت مشاهده است. هیچ عملی مجاز نیست.',
+  };
+  wa.innerHTML=`<div class="warn-banner"><span class="warn-icon">🚨</span><div class="warn-text">${msgs[wl]||''}</div></div>`;
+}
+
+/* ── POST BUILD ── */
+function buildPost(p){
+  const user=getUser(p.userId)||{name:'?',username:'?',color:'#888',ticks:[],level:1};
+  const pinnedId=DB.get('pinned_post');
+  const isPinned=p.id===pinnedId;
+  const liked=(p.likes||[]).includes(ME.id);
+  const bookmarked=(p.bookmarks||[]).includes(ME.id);
+  const canManage=p.userId===ME.id||ME.role==='owner'||ME.role==='admin';
+
+  let avHtml=avHTML(user,40,'cursor:pointer;');
+  let mediaHtml='';
+  if(p.image)mediaHtml+=`<div class="post-media"><img src="${esc(p.image)}" loading="lazy"/></div>`;
+  if(p.video)mediaHtml+=`<div class="post-media"><video src="${esc(p.video)}" controls></video></div>`;
+  if(p.location)mediaHtml+=`<div style="font-size:12px;color:var(--accent3);margin-top:6px;">📍 ${esc(p.location)}</div>`;
+  if(p.poll)mediaHtml+=buildPollHTML(p);
+
+  return `<div class="post${isPinned?' pinned-post':''}" id="post-${p.id}">
+    ${isPinned?'<div class="pin-label">📌 پین شده</div>':''}
+    <div class="post-header">
+      <div onclick="viewProfile('${p.userId}')">${avHtml}</div>
+      <div class="post-meta">
+        <div class="post-author"><span>${esc(user.name)}</span>${ticksHTML(user)}</div>
+        <div class="post-handle">@${esc(user.username)}</div>
+      </div>
+      <span class="post-time">${timeAgo(p.ts)}</span>
+      ${canManage?`<button class="post-menu-btn" onclick="openPostCtx(event,'${p.id}')">⋯</button>`:''}
+    </div>
+    <div class="post-content">
+      <div class="post-text">${linkify(esc(p.text))}</div>
+      ${mediaHtml}
+    </div>
+    <div class="post-actions">
+      <button class="pa-btn${liked?' liked':''}" onclick="likePost('${p.id}')"><span class="pa-icon">♥</span>${(p.likes||[]).length}</button>
+      <button class="pa-btn" onclick="toggleCmts('${p.id}')"><span class="pa-icon">💬</span>${(p.comments||[]).length}</button>
+      <button class="pa-btn" onclick="sharePost('${p.id}')"><span class="pa-icon">↗</span></button>
+      <button class="pa-btn${bookmarked?' bookmarked':''}" onclick="bookmarkPost('${p.id}')"><span class="pa-icon">🔖</span></button>
+    </div>
+    <div class="comments-section" id="cmts-${p.id}" style="display:none;">
+      ${buildCmtsHTML(p)}
+      ${p.commentsOff?'<p style="font-size:12px;color:var(--text3);padding:6px 0;">کامنت‌ها غیرفعال</p>':buildCmtInput(p.id)}
+    </div>
+  </div>`;
+}
+
+/* ── POLL ── */
+function buildPollHTML(p){
+  if(!p.poll)return '';
+  const total=p.poll.votes?Object.values(p.poll.votes).reduce((a,b)=>a+b,0):0;
+  const myVote=p.poll.userVotes?p.poll.userVotes[ME.id]:null;
+  return `<div class="poll-wrap">${p.poll.options.map((opt,i)=>{
+    const votes=(p.poll.votes&&p.poll.votes[i])||0;
+    const pct=total>0?Math.round(votes/total*100):0;
+    return `<div class="poll-option${myVote===i?' voted':''}" onclick="votePoll('${p.id}',${i})">
+      <div class="poll-bar" style="width:${myVote!==null?pct:0}%"></div>
+      <div class="poll-text"><span>${esc(opt)}</span>${myVote!==null?`<span class="poll-pct">${pct}%</span>`:''}</div>
+    </div>`;
+  }).join('')}
+  <div class="poll-total">${total} رأی</div></div>`;
+}
+
+window.votePoll=function(pid,optIdx){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p||!p.poll)return;
+  if(!p.poll.userVotes)p.poll.userVotes={};
+  if(!p.poll.votes)p.poll.votes={};
+  if(p.poll.userVotes[ME.id]!==undefined)return; // already voted
+  p.poll.userVotes[ME.id]=optIdx;
+  p.poll.votes[optIdx]=(p.poll.votes[optIdx]||0)+1;
+  savePosts(posts);renderFeed();
+};
+
+/* ── COMMENTS ── */
+function buildCmtsHTML(p){
+  if(!p.comments||!p.comments.length)return '';
+  const pinned=p.comments.filter(c=>c.pinned);
+  const rest=p.comments.filter(c=>!c.pinned);
+  return [...pinned,...rest].map(c=>{
+    const cu=getUser(c.userId)||{name:'?',color:'#888',ticks:[],level:1};
+    return `<div class="comment${c.pinned?' pinned-c':''}" id="c-${c.id}">
+      ${c.pinned?'<div class="pinned-lbl">📌 پین</div>':''}
+      <div class="comment-av" style="background:${cu.color||'var(--accent)'};">${cu.avatarImg?`<img src="${esc(cu.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:(cu.name||'?').slice(0,2).toUpperCase()}</div>
+      <div class="comment-body">
+        <div class="c-author-row"><span class="c-author">${esc(cu.name)} ${ticksHTML(cu)}</span><span class="c-time">${timeAgo(c.ts)}</span></div>
+        <div class="c-text">${esc(c.text)}</div>
+        <div class="c-acts">
+          <button class="c-act" onclick="likeCmt('${p.id}','${c.id}')">♥ ${c.likes||0}</button>
+          ${p.userId===ME.id||ME.role==='owner'||ME.role==='admin'?`<button class="c-act" onclick="pinCmt('${p.id}','${c.id}')">${c.pinned?'آن‌پین':'📌 پین'}</button><button class="c-act" style="color:var(--red);" onclick="delCmt('${p.id}','${c.id}')">🗑</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildCmtInput(pid){
+  const avUser=ME;
+  const avSt=avUser.avatarImg?`overflow:hidden;`:'';
+  const avCnt=avUser.avatarImg?`<img src="${esc(avUser.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`:(avUser.name||'N').slice(0,2).toUpperCase();
+  return `<div class="comment-input-row">
+    <div class="comment-av" style="background:${avUser.color||'var(--accent)'};${avSt}">${avCnt}</div>
+    <div class="comment-iw">
+      <input placeholder="کامنت..." id="ci-${pid}" onkeydown="if(event.key==='Enter')submitCmt('${pid}')"/>
+      <button class="csend" onclick="openStk('${pid}')">😊</button>
+      <button class="csend" onclick="submitCmt('${pid}')">➤</button>
+    </div>
+  </div>
+  <div id="stk-${pid}" class="sticker-row" style="display:none;"></div>
+  <div id="gifrow-${pid}" class="gif-row" style="display:none;"></div>`;
+}
+
+const STICKERS=['😂','❤️','🔥','👏','😢','😍','🤣','💯','😭','🎉','👀','✨','🙌','💀','🫶','🥹','😎','🤔','💪','🫡'];
+
+window.openStk=function(pid){
+  const el=document.getElementById('stk-'+pid);if(!el)return;
+  if(!el.children.length){
+    STICKERS.forEach(s=>{
+      const b=document.createElement('button');b.className='stk-btn';b.textContent=s;
+      b.onclick=()=>{const i=document.getElementById('ci-'+pid);if(i)i.value+=s;el.style.display='none';};
+      el.appendChild(b);
+    });
+    // GIFs by level
+    const gifs=getGifsForLevel(ME.level||1);
+    const gifrow=document.getElementById('gifrow-'+pid);
+    if(gifrow){
+      gifrow.innerHTML='';
+      gifs.forEach(g=>{
+        const b=document.createElement('span');b.className='gif-item';b.textContent=g;b.title='Lv'+ME.level;
+        b.onclick=()=>{const i=document.getElementById('ci-'+pid);if(i)i.value+=g;gifrow.style.display='none';};
+        gifrow.appendChild(b);
+      });
+    }
+  }
+  const showing=el.style.display!=='none';
+  el.style.display=showing?'none':'flex';
+  const gifrow=document.getElementById('gifrow-'+pid);
+  if(gifrow)gifrow.style.display=showing?'none':'flex';
+};
+
+window.toggleCmts=function(pid){
+  const el=document.getElementById('cmts-'+pid);if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+
+window.submitCmt=function(pid){
+  if(!canInteract(ME)){toast('حساب شما محدود شده','err');return;}
+  const inp=document.getElementById('ci-'+pid);if(!inp)return;
+  const text=inp.value.trim();if(!text)return;
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  if(!p.comments)p.comments=[];
+  p.comments.push({id:uid(),userId:ME.id,text,ts:Date.now(),likes:0,pinned:false});
+  savePosts(posts);inp.value='';
+  addNotif(p.userId,'comment',ME.name+' کامنت گذاشت',pid);
+  renderFeed();
+};
+
+window.likeCmt=function(pid,cid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  const c=p.comments?.find(x=>x.id===cid);if(!c)return;
+  c.likes=(c.likes||0)+1;savePosts(posts);renderFeed();
+};
+
+window.pinCmt=function(pid,cid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  if(p.userId!==ME.id&&ME.role!=='owner'&&ME.role!=='admin')return;
+  p.comments?.forEach(c=>c.pinned=c.id===cid?!c.pinned:false);
+  savePosts(posts);renderFeed();
+};
+
+window.delCmt=function(pid,cid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  p.comments=p.comments?.filter(c=>c.id!==cid)||[];savePosts(posts);renderFeed();
+};
+
+/* ── POST ACTIONS ── */
+window.likePost=function(pid){
+  if(!canInteract(ME)){toast('حساب شما محدود شده','err');return;}
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  if(!p.likes)p.likes=[];
+  const idx=p.likes.indexOf(ME.id);
+  if(idx>=0)p.likes.splice(idx,1);else{p.likes.push(ME.id);addNotif(p.userId,'like',ME.name+' پست تو را لایک کرد',pid);}
+  savePosts(posts);renderFeed();
+};
+
+window.bookmarkPost=function(pid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  if(!p.bookmarks)p.bookmarks=[];
+  const idx=p.bookmarks.indexOf(ME.id);
+  if(idx>=0)p.bookmarks.splice(idx,1);else p.bookmarks.push(ME.id);
+  savePosts(posts);renderFeed();toast('🔖 ذخیره شد');
+};
+
+window.sharePost=function(pid){
+  navigator.clipboard?.writeText(location.href+'?p='+pid);toast('🔗 لینک کپی شد');
+};
+
+window.openPostCtx=function(e,pid){
+  e.stopPropagation();
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  const isOwn=p.userId===ME.id,isAdmin=ME.role==='owner'||ME.role==='admin';
+  const isPinned=DB.get('pinned_post')===pid;
+  const cm=document.getElementById('ctx');
+  let html='';
+  html+=`<div class="ctx-item" onclick="sharePost('${pid}');closeCtx()">🔗 کپی لینک</div>`;
+  if(isOwn||isAdmin){
+    html+=`<div class="ctx-item" onclick="toggleCmtsPost('${pid}');closeCtx()">💬 ${p.commentsOff?'فعال':'غیرفعال'} کردن کامنت</div>`;
+  }
+  if(isAdmin){
+    html+=`<div class="ctx-item" onclick="togglePin('${pid}');closeCtx()">📌 ${isPinned?'آن‌پین':'پین کردن'}</div>`;
+  }
+  if(isOwn||isAdmin){
+    html+=`<div class="ctx-div"></div><div class="ctx-item danger" onclick="deletePost('${pid}');closeCtx()">🗑 حذف پست</div>`;
+  }
+  cm.innerHTML=html;cm.classList.add('show');
+  cm.style.top=e.clientY+'px';
+  cm.style.right=(window.innerWidth-e.clientX+5)+'px';cm.style.left='auto';
+  setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),30);
+};
+
+window.closeCtx=function(){document.getElementById('ctx').classList.remove('show');};
+
+window.toggleCmtsPost=function(pid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  p.commentsOff=!p.commentsOff;savePosts(posts);renderFeed();
+  toast(p.commentsOff?'💬 کامنت غیرفعال':'💬 کامنت فعال');
+};
+
+window.togglePin=function(pid){
+  const cur=DB.get('pinned_post');
+  DB.set('pinned_post',cur===pid?null:pid);
+  renderFeed();toast(cur===pid?'📌 آن‌پین شد':'📌 پین شد');
+};
+
+window.deletePost=function(pid){
+  if(!confirm('پست حذف شود؟'))return;
+  savePosts(getPosts().filter(p=>p.id!==pid));
+  if(DB.get('pinned_post')===pid)DB.set('pinned_post',null);
+  renderFeed();addLog('پست حذف شد');toast('🗑 حذف شد');
+};
+
+/* ── PUBLISH POST ── */
+window.updateCC=function(){document.getElementById('cc').textContent=document.getElementById('post-txt').value.length+'/500';};
+window.scrollToComposer=function(){showPage('feed');setTimeout(()=>document.getElementById('composer').scrollIntoView({behavior:'smooth'}),80);};
+
+window.publishPost=function(){
+  if(!canPost(ME)){toast('قابلیت پست گذاشتن غیرفعال شده','err');return;}
+  const text=document.getElementById('post-txt').value.trim();
+  if(!text&&!pPost.image&&!pPost.video&&!pPost.poll){toast('محتوایی وارد کن','err');return;}
+  const posts=getPosts();
+  posts.push({id:uid(),userId:ME.id,text,image:pPost.image,video:pPost.video,
+    location:pPost.location,poll:pPost.poll,ts:Date.now(),likes:[],comments:[],bookmarks:[],commentsOff:false});
+  savePosts(posts);
+  document.getElementById('post-txt').value='';document.getElementById('cc').textContent='0/500';
+  document.getElementById('comp-media').innerHTML='';
+  pPost={text:'',image:null,video:null,location:null,poll:null};
+  // Level up every 5 posts
+  const myPosts=posts.filter(p=>p.userId===ME.id).length;
+  if(myPosts%5===0&&(ME.level||1)<MAX_LEVEL){
+    const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+    if(idx>=0){users[idx].level=(users[idx].level||1)+1;ME=users[idx];saveUsers(users);toast('🎉 لول '+ME.level+' شدی!');}
+  }
+  addLog(ME.name+' پست منتشر کرد');renderFeed();toast('✅ منتشر شد','ok');
+};
+
+window.handleImg=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    pPost.image=ev.target.result;
+    document.getElementById('comp-media').innerHTML=`<div class="cm-wrap"><img class="cm-img" src="${ev.target.result}"/><button class="cm-rm" onclick="clearMedia('image')">✕</button></div>`;
+  };r.readAsDataURL(f);
+};
+window.handleVid=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    pPost.video=ev.target.result;
+    document.getElementById('comp-media').innerHTML=`<div class="cm-wrap"><video style="width:80px;height:80px;object-fit:cover;border-radius:7px;" src="${ev.target.result}"></video><button class="cm-rm" onclick="clearMedia('video')">✕</button></div>`;
+  };r.readAsDataURL(f);
+};
+window.clearMedia=function(t){pPost[t]=null;document.getElementById('comp-media').innerHTML='';};
+
+window.shareLocation=function(){
+  openModal('mod-location');
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const txt=`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
+      document.getElementById('loc-text').textContent=txt;pPost.location=txt;
+    },()=>{document.getElementById('loc-text').textContent='دسترسی رد شد';});
+  }
+};
+window.confirmLoc=function(){closeModal('mod-location');if(pPost.location)toast('📍 موقعیت اضافه شد');};
+
+window.addTag=function(){
+  const t=prompt('نام تگ یا گروه (بدون #):');
+  if(t){const ta=document.getElementById('post-txt');ta.value+=' #'+t.trim();}
+};
+
+/* ── POLL CREATE ── */
+window.addPollOpt=function(){
+  const wrap=document.getElementById('poll-opts-wrap');
+  const n=wrap.children.length+1;
+  const d=document.createElement('div');d.className='fg';
+  d.innerHTML=`<label>گزینه ${n}</label><input class="poll-opt-in" placeholder="گزینه ${n}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px;color:var(--text);outline:none;"/>`;
+  wrap.appendChild(d);
+};
+
+window.publishPoll=function(){
+  const q=document.getElementById('poll-q').value.trim();
+  const opts=[...document.querySelectorAll('.poll-opt-in')].map(i=>i.value.trim()).filter(Boolean);
+  if(!q||opts.length<2){toast('سوال و حداقل ۲ گزینه لازم','err');return;}
+  pPost.poll={question:q,options:opts,votes:{},userVotes:{}};
+  closeModal('mod-poll');toast('📊 نظرسنجی آماده انتشار');
+};
+
+/* ── STORIES ── */
+window.onStoryFile=function(e){
+  const f=e.target.files[0];if(!f)return;
+  document.getElementById('story-file-name').textContent=f.name;
+  const r=new FileReader();r.onload=ev=>storyFileData={data:ev.target.result,type:f.type};
+  r.readAsDataURL(f);
+};
+
+window.createStory=function(){
+  if(!canStory(ME)){toast('استوری گذاشتن غیرفعال شده','err');return;}
+  const text=document.getElementById('story-txt').value.trim();
+  const emoji=document.getElementById('story-emoji').value||'😊';
+  if(!text&&!storyFileData){toast('متن یا فایل لازم است','err');return;}
+  const stories=DB.get('stories')||[];
+  stories.push({id:uid(),userId:ME.id,text,emoji,media:storyFileData,textPos:storyTextPos||'center',ts:Date.now(),seenBy:[]});
+  DB.set('stories',stories);
+  closeModal('mod-story');storyFileData=null;storyTextPos='center';
+  document.getElementById('story-txt').value='';document.getElementById('story-file-name').textContent='انتخاب نشده';
+  renderFeed();toast('✅ استوری منتشر شد','ok');
+};
+
+function renderStories(){
+  const stories=(DB.get('stories')||[]).filter(s=>Date.now()-s.ts<86400000);
+  const sl=document.getElementById('stories-list');sl.innerHTML='';
+  stories.forEach(s=>{
+    const u=getUser(s.userId);if(!u)return;
+    const seen=(s.seenBy||[]).includes(ME.id);
+    const avSt=u.avatarImg?`<img src="${esc(u.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`:(u.name||'?').slice(0,2).toUpperCase();
+    sl.innerHTML+=`<div class="story-item" onclick="viewStory('${s.id}')">
+      <div class="story-ring${seen?' seen':''}"><div class="story-av" style="background:${u.color||'var(--accent)'};">${avSt}</div></div>
+      <span class="story-name">${esc(u.name.split(' ')[0])}</span>
+    </div>`;
+  });
+}
+
+let storyTimer=null;
+window.viewStory=function(sid){
+  const stories=DB.get('stories')||[];const s=stories.find(x=>x.id===sid);if(!s)return;
+  if(!s.seenBy)s.seenBy=[];
+  if(!s.seenBy.includes(ME.id))s.seenBy.push(ME.id);
+  DB.set('stories',stories);
+  const u=getUser(s.userId)||{name:'?',color:'#888'};
+  const mw=document.getElementById('sv-media-wrap');
+  if(s.media){
+    if(s.media.type.startsWith('video/')){
+      mw.innerHTML=`<video class="sv-media" src="${s.media.data}" autoplay muted loop style="width:100%;height:100%;object-fit:cover;display:block;"></video>`;
+    } else {
+      mw.innerHTML=`<img class="sv-media" src="${s.media.data}" style="width:100%;height:100%;object-fit:cover;display:block;"/>`;
+    }
+  } else {
+    mw.innerHTML=`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:90px;background:${u.color||'#1a1a24'};">${s.emoji||'😊'}</div>`;
+  }
+
+  // Text position
+  const posMap={top:'top:22%;bottom:auto;',center:'top:50%;transform:translateX(-50%) translateY(-50%);bottom:auto;',bottom:'bottom:36px;top:auto;'};
+  const posStyle=posMap[s.textPos||'center']||posMap.center;
+  const stEl=document.getElementById('sv-text');
+  stEl.textContent=s.text||'';
+  stEl.style.cssText=`position:absolute;left:0;right:0;text-align:center;color:#fff;font-size:17px;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.9);padding:0 18px;${posStyle}`;
+
+  const avSt=u.avatarImg?`<img src="${esc(u.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`:(u.name||'?').slice(0,2).toUpperCase();
+  document.getElementById('sv-user').innerHTML=`<div class="sv-user-av" style="background:${u.color||'#888'};">${avSt}</div><span class="sv-user-name">${esc(u.name)}</span>`;
+  document.getElementById('sv-prog').innerHTML='<div class="sv-pseg"><div class="sv-pfill" id="svpf"></div></div>';
+  document.getElementById('story-viewer').classList.add('show');
+  let w=0;clearInterval(storyTimer);
+  storyTimer=setInterval(()=>{w+=1.5;const pf=document.getElementById('svpf');if(pf)pf.style.width=w+'%';if(w>=100){clearInterval(storyTimer);closeStory();}},100);
+};
+window.closeStory=function(){document.getElementById('story-viewer').classList.remove('show');clearInterval(storyTimer);};
+
+/* ── EXPLORE ── */
+function renderExplore(){
+  const tags=['برنامه‌نویسی','موسیقی','ورزش','فناوری','هنر','سینما','بازی','کتاب','علم'];
+  document.getElementById('trend-tags').innerHTML=tags.map(t=>
+    `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;margin-bottom:7px;display:flex;justify-content:space-between;cursor:pointer;" onclick="searchTag('${t}')">
+      <span><strong>#${t}</strong></span>
+      <span style="font-size:11px;color:var(--text3);">${Math.floor(Math.random()*500)+10} پست</span>
+    </div>`).join('');
+  const users=getUsers().filter(u=>u.id!==ME.id);
+  document.getElementById('sug-users').innerHTML=users.slice(0,5).map(u=>
+    `<div class="suggested-user">
+      <div onclick="viewProfile('${u.id}')">${avHTML(u,40,'cursor:pointer;')}</div>
+      <div style="flex:1;cursor:pointer;" onclick="viewProfile('${u.id}')">
+        <div style="font-weight:700;display:flex;align-items:center;gap:3px;font-size:13px;">${esc(u.name)} ${ticksHTML(u)}</div>
+        <div style="font-size:11px;color:var(--text2);">@${esc(u.username)} · Lv${u.level||1}</div>
+      </div>
+      <button class="adm-btn" onclick="followUser('${u.id}')" style="font-size:11px;">${(u.followers||[]).includes(ME.id)?'دنبال می‌کنی':'دنبال کردن'}</button>
+    </div>`).join('');
+}
+
+window.doSearch=function(){
+  const q=document.getElementById('search-in').value.trim().toLowerCase();
+  const res=document.getElementById('search-results');
+  if(!q){res.innerHTML='';return;}
+  const users=getUsers().filter(u=>u.name.toLowerCase().includes(q)||u.username.toLowerCase().includes(q));
+  const posts=getPosts().filter(p=>p.text.toLowerCase().includes(q));
+  res.innerHTML=(users.length?'<h3 style="font-size:12px;color:var(--text2);margin-bottom:7px;font-weight:700;">👤 کاربران</h3>'+users.map(u=>`<div class="suggested-user" style="cursor:pointer;" onclick="viewProfile('${u.id}')">${avHTML(u,34,'cursor:pointer;')}<div><div style="font-weight:700;font-size:13px;">${esc(u.name)} ${ticksHTML(u)}</div><div style="font-size:11px;color:var(--text2);">@${esc(u.username)}</div></div></div>`).join(''):'')
+  +(posts.length?'<h3 style="font-size:12px;color:var(--text2);margin:10px 0 7px;font-weight:700;">📝 پست‌ها</h3>'+posts.slice(0,4).map(p=>buildPost(p)).join(''):'')
+  +((!users.length&&!posts.length)?'<p style="color:var(--text3);text-align:center;padding:18px;">نتیجه‌ای یافت نشد</p>':'');
+};
+
+window.searchTag=function(tag){showPage('explore');document.getElementById('search-in').value='#'+tag;doSearch();};
+
+window.followUser=function(uid){
+  const users=getUsers();
+  const u=users.find(x=>x.id===uid);const me2=users.find(x=>x.id===ME.id);if(!u||!me2)return;
+  if(!u.followers)u.followers=[];if(!me2.following)me2.following=[];
+  const idx=u.followers.indexOf(ME.id);
+  if(idx>=0){u.followers.splice(idx,1);me2.following=me2.following.filter(x=>x!==uid);}
+  else{u.followers.push(ME.id);me2.following.push(uid);addNotif(uid,'follow',ME.name+' شما را دنبال کرد');}
+  saveUsers(users);ME=users.find(x=>x.id===ME.id);renderExplore();toast(idx>=0?'دنبال نمی‌کنی':'✅ دنبال کردی');
+};
+
+/* ── PROFILE ── */
+window.viewProfile=function(uid){showPage('profile');renderProfile(uid);};
+
+function renderProfile(uid){
+  const user=getUser(uid);if(!user)return;
+  const isMe=uid===ME.id;
+  const isFollow=(user.followers||[]).includes(ME.id);
+  const posts=getPosts().filter(p=>p.userId===uid);
+  const canEditCover=isMe;
+
+  document.getElementById('profile-content').innerHTML=`
+    <div class="profile-cover" id="pc-cover">
+      ${user.coverImg?`<img src="${esc(user.coverImg)}"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,${user.color||'var(--accent2)'},var(--bg4));"></div>`}
+      ${canEditCover?`<button class="profile-cover-edit" onclick="document.getElementById('cover-up2').click()">🖼️ تغییر بنر</button><input type="file" id="cover-up2" accept="image/*" style="display:none" onchange="uploadCoverDirect(event)"/>`:'' }
+    </div>
+    <div class="profile-info">
+      <div class="profile-av-wrap">
+        <div class="profile-av" style="background:${user.color||'var(--accent)'};">
+          ${user.avatarImg?`<img src="${esc(user.avatarImg)}"/>`:(user.name||'?').slice(0,2).toUpperCase()}
+          ${isMe?`<div class="profile-av-edit" onclick="document.getElementById('av-up2').click()">📷</div><input type="file" id="av-up2" accept="image/*" style="display:none" onchange="uploadAvatarDirect(event)"/>`:'' }
+        </div>
+        <div class="profile-av-lv">Lv${user.level||1}</div>
+      </div>
+      <div class="pname-row"><span class="pname">${esc(user.name)}</span>${ticksHTML(user)}</div>
+      <div class="phandle">@${esc(user.username)}</div>
+      ${user.bio?`<div class="pbio">${esc(user.bio)}</div>`:''}
+      <div style="font-size:11px;color:var(--text3);margin-top:3px;">🗓 عضو از ${new Date(user.joinDate||Date.now()).toLocaleDateString('fa-IR')}</div>
+      <div class="pstats">
+        <div class="pstat"><div class="pstat-n">${posts.length}</div><div class="pstat-l">پست</div></div>
+        <div class="pstat"><div class="pstat-n">${(user.followers||[]).length}</div><div class="pstat-l">دنبال‌کننده</div></div>
+        <div class="pstat"><div class="pstat-n">${(user.following||[]).length}</div><div class="pstat-l">دنبال شده</div></div>
+      </div>
+      <div class="pacts">
+        ${isMe?`<button class="prof-btn" onclick="showPage('settings')">✏️ ویرایش</button>`:`<button class="prof-btn follow" onclick="followUser('${uid}')">${isFollow?'دنبال می‌کنی':'دنبال کردن'}</button><button class="prof-btn" onclick="openDM('${uid}')">💬 پیام</button>`}
+        ${isMe?`<button class="prof-btn" onclick="showPage('upgrade')">⭐ ارتقاء</button>`:''}
+      </div>
+    </div>
+    <div class="profile-tabs"><div class="ptab active">پست‌ها</div></div>
+    <div class="content-wrap">${posts.length?[...posts].reverse().map(p=>buildPost(p)).join(''):'<p style="text-align:center;color:var(--text3);padding:36px;">پستی نیست</p>'}</div>`;
+}
+
+/* ── AVATAR / COVER UPLOAD ── */
+window.uploadAvatar=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+    if(idx>=0){users[idx].avatarImg=ev.target.result;ME=users[idx];saveUsers(users);}
+    updateSidebar();toast('✅ عکس پروفایل آپدیت شد','ok');
+  };r.readAsDataURL(f);
+};
+window.uploadAvatarDirect=function(e){
+  uploadAvatar(e);
+  setTimeout(()=>renderProfile(ME.id),200);
+};
+window.uploadCover=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+    if(idx>=0){users[idx].coverImg=ev.target.result;ME=users[idx];saveUsers(users);}
+    toast('✅ بنر آپدیت شد','ok');
+  };r.readAsDataURL(f);
+};
+window.uploadCoverDirect=function(e){
+  uploadCover(e);setTimeout(()=>renderProfile(ME.id),200);
+};
+window.uploadBadgeImg=function(e){
+  if(!ME.ticks?.includes('gold')){toast('فقط برای تیک طلایی','err');return;}
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+    if(idx>=0){users[idx].badgeImg=ev.target.result;ME=users[idx];saveUsers(users);}
+    document.getElementById('badge-img-preview').innerHTML=`<img src="${ev.target.result}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;"/>`;
+    toast('✅ بج پرمیوم آپدیت شد','ok');
+  };r.readAsDataURL(f);
+};
+
+/* ── NOTIFICATIONS ── */
+function addNotif(toId,type,text,ref){
+  if(toId===ME.id)return;
+  const all=DB.get('notifs')||{};
+  if(!all[toId])all[toId]=[];
+  all[toId].unshift({id:uid(),type,text,ref,ts:Date.now(),read:false});
+  DB.set('notifs',all);
+}
+
+function renderNotifs(){
+  const all=DB.get('notifs')||{};const mine=(all[ME.id]||[]);
+  mine.forEach(n=>n.read=true);if(all[ME.id])all[ME.id]=mine;DB.set('notifs',all);
+  document.getElementById('notif-badge').style.display='none';
+  // sync mobile badge
+  const mnb=document.getElementById('mn-notif-badge');if(mnb){mnb.textContent='0';mnb.classList.remove('show');}
+  const el=document.getElementById('notifs-list');
+  if(!mine.length){el.innerHTML='<div style="text-align:center;padding:36px;color:var(--text3);">اعلانی وجود ندارد</div>';return;}
+  el.innerHTML=mine.map(n=>`<div class="notif-item${n.read?'':' unread'}">
+    <div class="notif-icon">${{like:'♥',comment:'💬',follow:'👤',tick:'⭐',warn:'⚠️',dm:'💬'}[n.type]||'🔔'}</div>
+    <div><div class="notif-text">${esc(n.text)}</div><div class="notif-time">${timeAgo(n.ts)}</div></div>
+  </div>`).join('');
+}
+
+/* ── DM ── */
+function renderDMList(){
+  const users=getUsers().filter(u=>u.id!==ME.id);
+  const dms=DB.get('dms')||{};
+  document.getElementById('dm-list').innerHTML=users.map(u=>{
+    const key=[ME.id,u.id].sort().join('_');
+    const msgs=(dms[key]||[]);const last=msgs[msgs.length-1];
+    return `<div class="dm-item${curDMUser===u.id?' active':''}" onclick="openDM('${u.id}')">
+      <div class="dm-av" style="background:${u.color||'var(--accent)'};">${u.avatarImg?`<img src="${esc(u.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`:(u.name||'?').slice(0,2).toUpperCase()}</div>
+      <div class="dm-info"><div class="dm-name">${esc(u.name)} ${ticksHTML(u)}</div><div class="dm-last">${last?esc(last.text.slice(0,28)):''}</div></div>
+    </div>`;
+  }).join('');
+}
+
+window.openDM=function(uid){
+  if(curPage!=='dm')showPage('dm');
+  curDMUser=uid;const user=getUser(uid);if(!user)return;
+  const dms=DB.get('dms')||{};const key=[ME.id,uid].sort().join('_');
+  const msgs=dms[key]||[];
+  document.getElementById('dm-chat').innerHTML=`
+    <div class="dm-header">${avHTML(user,38)}<div><div style="font-weight:700;font-size:13px;">${esc(user.name)} ${ticksHTML(user)}</div><div style="font-size:11px;color:var(--green);">● آنلاین</div></div></div>
+    <div class="dm-msgs" id="dm-msgs">${msgs.map(m=>`<div class="msg-row ${m.from===ME.id?'mine':'theirs'}"><div class="msg-bubble ${m.from===ME.id?'mine':'theirs'}">${esc(m.text)}</div><div class="msg-t">${timeAgo(m.ts)}</div></div>`).join('')}</div>
+    <div class="dm-inp-row"><input class="dm-inp" id="dm-inp" placeholder="پیام..." onkeydown="if(event.key==='Enter')sendDM()"/><button class="dm-send" onclick="sendDM()">➤</button></div>`;
+  renderDMList();
+  setTimeout(()=>{const m=document.getElementById('dm-msgs');if(m)m.scrollTop=m.scrollHeight;},50);
+};
+
+window.sendDM=function(){
+  const inp=document.getElementById('dm-inp');if(!inp)return;
+  const text=inp.value.trim();if(!text||!curDMUser)return;
+  if(!canInteract(ME)){toast('حساب شما محدود شده','err');return;}
+  const dms=DB.get('dms')||{};const key=[ME.id,curDMUser].sort().join('_');
+  if(!dms[key])dms[key]=[];
+  dms[key].push({id:uid(),from:ME.id,text,ts:Date.now()});
+  DB.set('dms',dms);inp.value='';
+  addNotif(curDMUser,'dm',ME.name+' پیام فرستاد');
+  openDM(curDMUser);
+};
+
+/* ── SETTINGS ── */
+function loadSettings(){
+  document.getElementById('set-name').value=ME.name||'';
+  document.getElementById('set-username').value=ME.username||'';
+  document.getElementById('set-bio').value=ME.bio||'';
+  const s=ME.settings||{};
+  document.getElementById('tog-private').classList.toggle('on',!!s.private);
+  document.getElementById('tog-comments').classList.toggle('on',s.comments!==false);
+  document.getElementById('tog-online').classList.toggle('on',s.online!==false);
+  if(ME.ticks?.includes('gold'))document.getElementById('premium-badge-section').style.display='block';
+  if(ME.badgeImg)document.getElementById('badge-img-preview').innerHTML=`<img src="${esc(ME.badgeImg)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;"/>`;
+}
+
+window.toggleS=function(key){
+  const el=document.getElementById('tog-'+key);el.classList.toggle('on');
+  if(!ME.settings)ME.settings={};ME.settings[key]=el.classList.contains('on');
+  const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx>=0){users[idx]=ME;saveUsers(users);}
+};
+
+window.saveSettings=function(){
+  const name=document.getElementById('set-name').value.trim();
+  const username=document.getElementById('set-username').value.trim().replace('@','').toLowerCase();
+  const bio=document.getElementById('set-bio').value.trim();
+  const pass=document.getElementById('set-pass').value;
+  if(!name||!username){toast('نام و نام کاربری الزامی','err');return;}
+  if(username===_o&&ME.username!==_o){toast('این نام کاربری در دسترس نیست','err');return;}
+  const users=getUsers();
+  if(users.find(u=>u.username===username&&u.id!==ME.id)){toast('نام کاربری تکراری','err');return;}
+  const idx=users.findIndex(u=>u.id===ME.id);if(idx<0)return;
+  users[idx].name=name;users[idx].username=username;users[idx].bio=bio;
+  if(pass.length>=6)users[idx].password=pass;
+  ME=users[idx];saveUsers(users);DB.set('session',ME.id);
+  updateSidebar();addLog('تنظیمات آپدیت شد');toast('✅ ذخیره شد','ok');
+};
+
+window.logoutAll=function(){if(confirm('خروج؟')){DB.del('session');location.reload();}};
+
+/* ── UPGRADE ── */
+const JOBS=[
+  {id:'journalist',icon:'📰',name:'خبرنگار',desc:'رسانه و خبر'},
+  {id:'developer',icon:'💻',name:'برنامه‌نویس',desc:'توسعه نرم‌افزار'},
+  {id:'artist',icon:'🎨',name:'هنرمند',desc:'طراح و هنرمند'},
+  {id:'activist',icon:'✊',name:'فعال اجتماعی',desc:'حقوق بشر'},
+  {id:'business',icon:'💼',name:'کسب‌وکار',desc:'کارآفرینی'},
+  {id:'athlete',icon:'🏆',name:'ورزشکار',desc:'ورزش حرفه‌ای'},
+];
+
+function renderUpgrade(){
+  document.getElementById('job-opts').innerHTML=JOBS.map(j=>
+    `<div class="job-opt${selJob===j.id?' sel':''}" onclick="selJob='${j.id}';renderUpgrade()">
+      <span class="job-icon">${j.icon}</span>
+      <div class="job-info"><h4>${j.name}</h4><p>${j.desc}</p></div>
+    </div>`).join('');
+}
+window.submitUpgrade=function(){
+  if(!selJob){toast('یک شغل انتخاب کن','err');return;}
+  const note=document.getElementById('upgrade-note').value;
+  const reqs=DB.get('upgrade_reqs')||[];
+  if(reqs.find(r=>r.userId===ME.id&&r.status==='pending')){toast('قبلاً درخواست دادی','err');return;}
+  reqs.push({id:uid(),userId:ME.id,job:selJob,note,ts:Date.now(),status:'pending'});
+  DB.set('upgrade_reqs',reqs);closeModal('mod-upgrade');
+  addLog(ME.name+' درخواست ارتقاء داد: '+selJob);
+  toast('✅ درخواست ارسال شد','ok');
+};
+
+/* ── ADMIN / OWNER ── */
+function renderAdmin(){
+  const users=getUsers();const posts=getPosts();
+  const reqs=(DB.get('upgrade_reqs')||[]).filter(r=>r.status==='pending');
+  document.getElementById('adm-u-cnt').textContent=users.length;
+  document.getElementById('adm-p-cnt').textContent=posts.length;
+  document.getElementById('adm-req-cnt').textContent=reqs.length;
+
+  // Users table
+  document.getElementById('adm-users-body').innerHTML=users.map(u=>{
+    const ticks=u.ticks||[];const wl=u.warnLevel||0;
+    const isOwnerAcc=u.username===_o;
+    const showPass=!isOwnerAcc?`<span style="font-size:10px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:monospace;cursor:pointer;" onclick="this.textContent=this.textContent==='●●●●●●'?${JSON.stringify(u.password||'')}: '●●●●●●'">●●●●●●</span>`:`<span style="font-size:10px;color:var(--text3);">مخفی</span>`;
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:7px;">${avHTML(u,28,'cursor:pointer;')}<div><div style="font-weight:700;font-size:12px;">${esc(u.name)}</div><div style="font-size:10px;color:var(--text3);">@${esc(u.username)}</div></div></div></td>
+      <td><span style="font-size:11px;font-weight:700;">Lv${u.level||1}</span></td>
+      <td>${ticks.map(t=>({blue:'<span class="badge blue">✅</span>',purple:'<span class="badge purple">🔮</span>',gold:'<span class="badge gold">💎</span>'})[t]||'').join('')||'<span style="color:var(--text3);font-size:11px;">ندارد</span>'}</td>
+      <td>${wl===0?'<span style="color:var(--text3);font-size:11px;">ندارد</span>':`<span class="badge ${['','orange','red','red'][wl]}">اخطار ${wl}</span>`}</td>
+      <td>${showPass}</td>
+      <td style="font-size:11px;">${posts.filter(p=>p.userId===u.id).length}</td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          ${!isOwnerAcc?`
+          <select onchange="addTick('${u.id}',this.value);this.value=''" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:2px 5px;font-size:10px;">
+            <option value="">+ تیک</option>
+            <option value="blue">✅ آبی</option>
+            <option value="purple">🔮 بنفش</option>
+            <option value="gold">💎 طلایی</option>
+          </select>
+          <select onchange="removeTick('${u.id}',this.value);this.value=''" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:2px 5px;font-size:10px;">
+            <option value="">- تیک</option>
+            ${ticks.map(t=>`<option value="${t}">${{blue:'✅',purple:'🔮',gold:'💎'}[t]||t}</option>`).join('')}
+          </select>
+          <select onchange="setWarn('${u.id}',this.value)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:2px 5px;font-size:10px;">
+            <option value="0"${wl===0?' selected':''}>⚠️ اخطار</option>
+            <option value="0"${wl===0?' selected':''}>بدون اخطار</option>
+            <option value="1"${wl===1?' selected':''}>اخطار ۱</option>
+            <option value="2"${wl===2?' selected':''}>اخطار ۲</option>
+            <option value="3"${wl===3?' selected':''}>اخطار ۳</option>
+          </select>
+          <select onchange="setLevel('${u.id}',this.value)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:2px 5px;font-size:10px;">
+            ${Array.from({length:MAX_LEVEL},(_,i)=>`<option value="${i+1}"${(u.level||1)===i+1?' selected':''}>Lv${i+1}</option>`).join('')}
+          </select>
+          <button class="adm-btn danger" onclick="deleteUser('${u.id}')">🗑 حذف</button>
+          `:`<span class="badge purple">👑 مالک</span>`}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Upgrade requests
+  document.getElementById('adm-upgrade-reqs').innerHTML=reqs.length?reqs.map(r=>{
+    const u=getUser(r.userId);const job=JOBS.find(j=>j.id===r.job)||{name:r.job,icon:'👤'};
+    return `<div style="background:var(--bg3);border-radius:9px;padding:11px;margin-bottom:9px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;">
+      <div style="flex:1;"><div style="font-weight:700;font-size:13px;">${u?esc(u.name):r.userId} <span style="font-size:11px;color:var(--text2);">${job.icon} ${job.name}</span></div>${r.note?`<div style="font-size:11px;color:var(--text2);margin-top:2px;">${esc(r.note)}</div>`:''}<div style="font-size:10px;color:var(--text3);">${timeAgo(r.ts)}</div></div>
+      <div style="display:flex;gap:5px;">
+        <button class="adm-btn" onclick="approveUp('${r.id}','blue')" style="border-color:rgba(59,130,246,.5);color:#3b82f6;font-size:11px;">✅ آبی</button>
+        <button class="adm-btn" onclick="approveUp('${r.id}','gold')" style="border-color:rgba(245,158,11,.5);color:#f59e0b;font-size:11px;">💎 طلایی</button>
+        <button class="adm-btn danger" onclick="rejectUp('${r.id}')" style="font-size:11px;">رد</button>
+      </div>
+    </div>`;
+  }).join(''):'<p style="color:var(--text3);font-size:12px;text-align:center;padding:16px;">درخواستی وجود ندارد</p>';
+
+  addLog('پنل مدیر بارگذاری شد');
+}
+
+window.setTick=function(uid,tick){
+  const users=getUsers();const u=users.find(x=>x.id===uid);if(!u)return;
+  if(!u.ticks)u.ticks=[];
+  if(tick&&!u.ticks.includes(tick)){u.ticks.push(tick);}
+  saveUsers(users);if(uid===ME.id)ME=u;
+  addLog('تیک '+tick+' برای '+u.name);toast('✅ تیک آپدیت شد','ok');renderAdmin();
+};
+
+window.addTick=function(uid,tick){
+  if(!tick)return;
+  const users=getUsers();const u=users.find(x=>x.id===uid);if(!u)return;
+  if(!u.ticks)u.ticks=[];
+  if(!u.ticks.includes(tick))u.ticks.push(tick);
+  saveUsers(users);if(uid===ME.id)ME=u;
+  addLog('تیک '+tick+' اضافه شد برای '+u.name);toast('✅ تیک اضافه شد','ok');renderAdmin();
+};
+
+window.removeTick=function(uid,tick){
+  if(!tick)return;
+  const users=getUsers();const u=users.find(x=>x.id===uid);if(!u)return;
+  u.ticks=(u.ticks||[]).filter(t=>t!==tick);
+  saveUsers(users);if(uid===ME.id)ME=u;
+  addLog('تیک '+tick+' حذف شد از '+u.name);toast('تیک حذف شد');renderAdmin();
+};
+
+window.setWarn=function(uid,level){
+  const users=getUsers();const u=users.find(x=>x.id===uid);if(!u)return;
+  u.warnLevel=parseInt(level)||0;saveUsers(users);
+  if(u.warnLevel>0){
+    addNotif(uid,'warn',{1:'اخطار اول: استوری غیرفعال شد.',2:'اخطار دوم: پست و استوری غیرفعال شدند.',3:'اخطار سوم: حساب شما فقط در حالت مشاهده است.'}[u.warnLevel]);
+  }
+  addLog('اخطار '+level+' برای '+u.name);toast('⚠️ اخطار ثبت شد');renderAdmin();
+};
+
+window.setLevel=function(uid,lv){
+  const users=getUsers();const u=users.find(x=>x.id===uid);if(!u)return;
+  u.level=parseInt(lv)||1;saveUsers(users);
+  if(uid===ME.id)ME=u;
+  addLog('لول '+lv+' برای '+u.name);toast('🎯 لول آپدیت شد','ok');renderAdmin();
+};
+
+window.deleteUser=function(uid){
+  if(!confirm('حذف کاربر؟'))return;
+  const u=getUser(uid);
+  saveUsers(getUsers().filter(x=>x.id!==uid));
+  savePosts(getPosts().filter(p=>p.userId!==uid));
+  addLog('کاربر '+(u?.name||uid)+' حذف شد');toast('🗑 حذف شد');renderAdmin();
+};
+
+window.approveUp=function(rid,tick){
+  const reqs=DB.get('upgrade_reqs')||[];const r=reqs.find(x=>x.id===rid);if(!r)return;
+  r.status='approved';DB.set('upgrade_reqs',reqs);
+  const users=getUsers();const u=users.find(x=>x.id===r.userId);
+  if(u){if(!u.ticks)u.ticks=[];if(!u.ticks.includes(tick))u.ticks.push(tick);const job=JOBS.find(j=>j.id===r.job);if(job)u.jobTitle=job.name;saveUsers(users);}
+  addNotif(r.userId,'tick','درخواست ارتقاء تأیید شد! تیک '+tick+' دریافت کردی 🎉');
+  addLog('درخواست '+( u?.name||r.userId)+' تأیید شد');toast('✅ تأیید شد','ok');renderAdmin();
+};
+
+window.rejectUp=function(rid){
+  const reqs=DB.get('upgrade_reqs')||[];const r=reqs.find(x=>x.id===rid);if(!r)return;
+  r.status='rejected';DB.set('upgrade_reqs',reqs);addLog('درخواست رد شد');toast('رد شد');renderAdmin();
+};
+
+/* ── UPDATES ── */
+function renderUpdates(){
+  const updates=[
+    {v:'v0.2',title:'آپدیت هفتگی دوم',date:'هفته دوم',items:[
+      {tag:'new',text:'آپلود عکس پروفایل و بنر'},
+      {tag:'new',text:'سیستم لول‌بندی (تا Lv20)'},
+      {tag:'new',text:'نظرسنجی در پست‌ها'},
+      {tag:'new',text:'استوری با عکس و ویدیو'},
+      {tag:'new',text:'سیستم اخطار مرحله‌ای'},
+      {tag:'new',text:'پین پست در فید همه'},
+      {tag:'new',text:'بج پرمیوم کنار نام (طلایی)'},
+      {tag:'new',text:'GIF و استیکر بر اساس لول'},
+      {tag:'imp',text:'بهبود طراحی پروفایل'},
+    ]},
+    {v:'v0.1',title:'نسخه بتا اول',date:'هفته اول',items:[
+      {tag:'new',text:'راه‌اندازی Cube'},
+      {tag:'new',text:'سیستم ثبت‌نام/ورود'},
+      {tag:'new',text:'پست، کامنت، لایک'},
+      {tag:'new',text:'تیک آبی، بنفش، طلایی'},
+      {tag:'new',text:'DM — پیام مستقیم'},
+      {tag:'new',text:'استوری'},
+      {tag:'new',text:'پنل مدیر'},
+    ]},
+  ];
+  document.getElementById('updates-wrap').innerHTML=updates.map(u=>`
+    <div class="uc"><div class="uc-header"><div class="uc-v">${u.v}</div><div class="uc-title">${u.title}</div><div class="uc-date">${u.date}</div></div>
+    <div class="uc-items">${u.items.map(i=>`<div class="uc-item"><span class="ui-tag ${i.tag}">${{new:'جدید',fix:'رفع باگ',imp:'بهبود'}[i.tag]}</span><span style="color:var(--text2);font-size:13px;">${i.text}</span></div>`).join('')}</div></div>`).join('');
+}
+
+/* ── LINKIFY ── */
+function linkify(text){
+  return text.replace(/#(\w+)/g,'<a href="#" onclick="searchTag(\'$1\')"><strong>#$1</strong></a>')
+             .replace(/@(\w+)/g,'<a href="#" onclick="viewProfileByUN(\'$1\')">@$1</a>');
+}
+window.viewProfileByUN=function(un){const u=getUsers().find(x=>x.username===un);if(u)viewProfile(u.id);};
+
+/* ── MODALS ── */
+window.openModal=function(id){document.getElementById(id).classList.add('show');};
+window.closeModal=function(id){document.getElementById(id).classList.remove('show');};
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');}));
+
+/* ── NOTIF BADGE ── */
+setInterval(()=>{
+  if(!ME)return;
+  const all=DB.get('notifs')||{};
+  const unread=(all[ME.id]||[]).filter(n=>!n.read).length;
+  const b=document.getElementById('notif-badge');
+  if(b){b.textContent=unread;b.style.display=unread>0?'block':'none';}
+},3000);
+
+/* ══════════════════════════════════════
+   CUBE NEW FEATURES v0.3
+══════════════════════════════════════ */
+
+/* ── AVATAR SHAPES ── */
+function getAvShapes(user){
+  const lv=user.level||1; const ticks=user.ticks||[];
+  const shapes=[{id:'circle',label:'دایره ⭕',req:0}];
+  if(lv>=3) shapes.push({id:'rounded',label:'گرد 🔲',req:3});
+  if(lv>=5) shapes.push({id:'square',label:'مربع ⬛',req:5});
+  if(lv>=8||ticks.includes('blue')) shapes.push({id:'squircle',label:'اسکوئیرکل 🔷',req:8});
+  if(lv>=12||ticks.includes('gold')) shapes.push({id:'heart',label:'قلبی ❤️',req:12});
+  if(lv>=15||ticks.includes('purple')) shapes.push({id:'star',label:'ستاره ⭐',req:15});
+  if(lv>=20) shapes.push({id:'diamond',label:'الماس 💎',req:20});
+  return shapes;
+}
+function shapeStyle(s){
+  const m={
+    circle:'border-radius:50%;',
+    rounded:'border-radius:22%;',
+    square:'border-radius:6px;',
+    squircle:'border-radius:28% 72% 72% 28%/28% 28% 72% 72%;',
+    heart:'clip-path:polygon(50% 80%,10% 40%,20% 10%,50% 30%,80% 10%,90% 40%);',
+    star:'clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);',
+    diamond:'clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);',
+  };
+  return m[s]||'border-radius:50%;';
+}
+window.setAvShape=function(shape){
+  const users=getUsers(); const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  users[idx].avatarShape=shape; ME=users[idx]; saveUsers(users);
+  renderProfile(ME.id); toast('✅ شکل پروفایل تغییر کرد','ok');
+};
+
+/* ── PROFILE RENDER (full rewrite) ── */
+window.renderProfile=function(uid){
+  const user=getUser(uid); if(!user)return;
+  const isMe=uid===ME.id;
+  const isFollow=(user.followers||[]).includes(ME.id);
+  const allPosts=getPosts().filter(p=>p.userId===uid);
+  const visiblePosts=allPosts.filter(p=>!p.hidden||ME.role==='owner');
+  const avShape=user.avatarShape||'circle';
+  const shapes=getAvShapes(user);
+
+  const shapePicker=isMe?`
+    <div style="margin-top:8px;">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:5px;">شکل پروفایل (Lv${user.level||1})</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+        ${shapes.map(s=>`<button onclick="setAvShape('${s.id}')" style="background:${avShape===s.id?'var(--accent)':'var(--bg3)'};border:1px solid ${avShape===s.id?'var(--accent)':'var(--border)'};color:${avShape===s.id?'#fff':'var(--text2)'};border-radius:8px;padding:4px 9px;font-size:12px;cursor:pointer;transition:all .15s;">${s.label}</button>`).join('')}
+      </div>
+    </div>`:''  ;
+
+  // Shop button — only shown to profile owner
+  const shopBtn=isMe?`<button class="prof-btn" onclick="openShop()" style="border-color:var(--gold);color:var(--gold);">🏪 فروشگاه</button>`:'';
+
+  const avSt=shapeStyle(avShape);
+  document.getElementById('profile-content').innerHTML=`
+    <div class="profile-cover" id="pc-cover" style="height:200px;position:relative;overflow:hidden;background:linear-gradient(135deg,${user.color||'var(--accent2)'},var(--bg4));">
+      ${user.coverImg?`<img src="${esc(user.coverImg)}" style="width:100%;height:100%;object-fit:cover;"/>`:''}
+      ${isMe?`<button class="profile-cover-edit" onclick="document.getElementById('cover-up2').click()">🖼️ تغییر بنر</button><input type="file" id="cover-up2" accept="image/*" style="display:none" onchange="uploadCoverDirect(event)"/>`:'' }
+    </div>
+    <div class="profile-info" style="padding:0 18px 18px;background:var(--bg2);border-bottom:1px solid var(--border);">
+      <div style="margin-top:-46px;margin-bottom:10px;position:relative;display:inline-block;">
+        <div style="width:90px;height:90px;background:${user.color||'var(--accent)'};border:4px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;overflow:hidden;position:relative;${avSt}">
+          ${user.avatarImg?`<img src="${esc(user.avatarImg)}" style="width:100%;height:100%;object-fit:cover;"/>`:( user.name||'?').slice(0,2).toUpperCase()}
+          ${isMe?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;color:#fff;font-size:20px;border-radius:inherit;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" onclick="document.getElementById('av-up2').click()">📷</div><input type="file" id="av-up2" accept="image/*" style="display:none" onchange="uploadAvatarDirect(event)"/>`:'' }
+        </div>
+        <div style="position:absolute;bottom:-4px;left:-4px;background:#000;border:1px solid rgba(255,255,255,.2);border-radius:0 0 46px 46px;width:52px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;">Lv${user.level||1}</div>
+      </div>
+      ${shapePicker}
+      <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:${isMe?'10px':'4px'};"><span style="font-size:20px;font-weight:800;">${esc(user.name)}</span>${ticksHTML(user)}</div>
+      <div style="font-size:14px;color:var(--text2);">@${esc(user.username)}</div>
+      ${user.bio?`<div style="font-size:14px;color:var(--text2);line-height:1.6;margin:7px 0;">${esc(user.bio)}</div>`:''}
+      <div style="font-size:11px;color:var(--text3);margin-top:3px;">🗓 عضو از ${new Date(user.joinDate||Date.now()).toLocaleDateString('fa-IR')}</div>
+      <div style="display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;">
+        <div style="text-align:center;cursor:pointer;"><div style="font-size:16px;font-weight:800;">${visiblePosts.length}</div><div style="font-size:12px;color:var(--text2);">پست</div></div>
+        <div style="text-align:center;cursor:pointer;"><div style="font-size:16px;font-weight:800;">${(user.followers||[]).length}</div><div style="font-size:12px;color:var(--text2);">دنبال‌کننده</div></div>
+        <div style="text-align:center;cursor:pointer;"><div style="font-size:16px;font-weight:800;">${(user.following||[]).length}</div><div style="font-size:12px;color:var(--text2);">دنبال شده</div></div>
+      </div>
+      <div style="display:flex;gap:7px;margin-top:13px;flex-wrap:wrap;">
+        ${isMe
+          ?`<button class="prof-btn" onclick="showPage('settings')">✏️ ویرایش</button><button class="prof-btn" onclick="showPage('upgrade')">⭐ ارتقاء</button>${shopBtn}`
+          :`<button class="prof-btn follow" onclick="followUser('${uid}')">${isFollow?'دنبال می‌کنی':'دنبال کردن'}</button><button class="prof-btn" onclick="openDM('${uid}')">💬 پیام</button><button class="prof-btn" onclick="openShopForUser('${uid}')" style="border-color:var(--gold);color:var(--gold);">🧸 هدیه</button>`}
+      </div>
+    </div>
+    <div style="display:flex;background:var(--bg2);border-bottom:1px solid var(--border);">
+      <div style="flex:1;padding:13px;text-align:center;font-size:13px;font-weight:600;color:var(--accent3);border-bottom:2px solid var(--accent3);">پست‌ها</div>
+    </div>
+    <div class="content-wrap">${visiblePosts.length?[...visiblePosts].reverse().map(p=>buildPost(p)).join(''):'<p style="text-align:center;color:var(--text3);padding:36px;">پستی نیست</p>'}</div>`;
+};
+
+/* ── POST HIDE (owner only) ── */
+window.toggleHidePost=function(pid){
+  const posts=getPosts(); const p=posts.find(x=>x.id===pid); if(!p||ME.role!=='owner')return;
+  p.hidden=!p.hidden; savePosts(posts); renderFeed();
+  addLog('پست '+(p.hidden?'مخفی':'نمایش')+' شد');
+  toast(p.hidden?'👁 پست مخفی شد':'👁 پست نمایش داده شد');
+};
+
+/* ── POST CTX MENU (owner full access) ── */
+window.openPostCtx=function(e,pid){
+  e.stopPropagation();
+  const posts=getPosts(); const p=posts.find(x=>x.id===pid); if(!p)return;
+  const isOwn=p.userId===ME.id; const isOwner=ME.role==='owner';
+  const isPinned=DB.get('pinned_post')===pid; const isHidden=p.hidden||false;
+  const cm=document.getElementById('ctx');
+  let html=`<div class="ctx-item" onclick="sharePost('${pid}');closeCtx()">🔗 کپی لینک</div>`;
+  if(isOwn||isOwner)
+    html+=`<div class="ctx-item" onclick="toggleCmtsPost('${pid}');closeCtx()">💬 ${p.commentsOff?'فعال':'غیرفعال'} کردن کامنت</div>`;
+  if(isOwner){
+    html+=`<div class="ctx-item" onclick="togglePin('${pid}');closeCtx()">📌 ${isPinned?'آن‌پین':'پین کردن'}</div>`;
+    html+=`<div class="ctx-item" onclick="toggleHidePost('${pid}');closeCtx()">👁 ${isHidden?'نمایش':'مخفی کردن'} پست</div>`;
+    html+=`<div class="ctx-div"></div>`;
+  }
+  if(isOwn||isOwner)
+    html+=`<div class="ctx-item danger" onclick="deletePost('${pid}');closeCtx()">🗑 حذف پست</div>`;
+  cm.innerHTML=html; cm.classList.add('show');
+  cm.style.top=e.clientY+'px'; cm.style.right=(window.innerWidth-e.clientX+5)+'px'; cm.style.left='auto';
+  setTimeout(()=>document.addEventListener('click',closeCtx,{once:true}),30);
+};
+
+/* ── STORY TAGGING & HIGHLIGHT ── */
+window.storyTagUser=function(){
+  const q=prompt('نام کاربری پیج برای تگ کردن:');
+  if(!q)return;
+  const u=getUsers().find(x=>x.username===q.replace('@',''));
+  if(!u){toast('کاربر یافت نشد','err');return;}
+  const t=document.getElementById('story-txt');
+  t.value+=' @'+u.username;
+  toast('✅ '+u.name+' تگ شد');
+};
+window.storyHighlight=function(){
+  const t=document.getElementById('story-txt');
+  const sel=window.getSelection?.()?.toString()||'';
+  if(!sel){toast('ابتدا متنی انتخاب کن','err');return;}
+  t.value=t.value.replace(sel,`✨${sel}✨`);
+  toast('✨ هایلایت شد');
+};
+
+/* ── STORY MODAL ADDITIONS ── */
+(function patchStoryModal(){
+  const el=document.getElementById('mod-story');
+  if(!el)return;
+  const body=el.querySelector('.modal-body');
+  if(!body)return;
+  // Add tag & highlight buttons before publish
+  const extraDiv=document.createElement('div');
+  extraDiv.style.cssText='display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;';
+  extraDiv.innerHTML=`
+    <button class="adm-btn" onclick="storyTagUser()" style="font-size:12px;">👤 تگ کردن پیج</button>
+    <button class="adm-btn" onclick="storyHighlight()" style="font-size:12px;">✨ هایلایت متن</button>
+  `;
+  const publishBtn=body.querySelector('.auth-btn');
+  if(publishBtn) body.insertBefore(extraDiv,publishBtn);
+})();
+
+/* ── GIFT / SHOP SYSTEM ── */
+const GIFT_COST_LEVEL=3; // cost in levels
+
+window.openShop=function(){
+  // Show shop modal for buying gifts for own profile
+  openShopForUser(ME.id);
+};
+
+window.openShopForUser=function(targetUserId){
+  const targetUser=getUser(targetUserId); if(!targetUser)return;
+  const isOwn=targetUserId===ME.id;
+  const myLevel=ME.level||1;
+  const canAfford=myLevel>=GIFT_COST_LEVEL;
+
+  let html=`
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(5px);" id="shop-overlay" onclick="if(event.target===this)closeShopOverlay()">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:380px;overflow:hidden;">
+        <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+          <h3 style="font-size:16px;font-weight:800;">🏪 فروشگاه Cube</h3>
+          <button onclick="closeShopOverlay()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:20px;">
+          ${isOwn?`<p style="font-size:13px;color:var(--text2);margin-bottom:16px;">موجودی شما: <strong style="color:var(--accent3);">Lv${myLevel}</strong></p>`:''}
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-size:44px;">🧸</span>
+              <div>
+                <div style="font-weight:700;font-size:15px;">خرس عروسکی تدی</div>
+                <div style="font-size:12px;color:var(--text2);margin-top:3px;">هدیه خاص برای مالک پست</div>
+                <div style="font-size:12px;color:var(--gold);margin-top:5px;font-weight:700;">هزینه: ${GIFT_COST_LEVEL} لول</div>
+              </div>
+            </div>
+            ${isOwn
+              ?`<p style="font-size:12px;color:var(--text3);margin-top:10px;">برای هدیه دادن به مالک یک پست، روی دکمه 🧸 زیر پست بزن</p>`
+              :`<div style="margin-top:12px;">
+                  ${canAfford
+                    ?`<p style="font-size:12px;color:var(--text2);margin-bottom:8px;">به کدام پست هدیه بدی؟ زیر پست روی 🧸 بزن</p>`
+                    :`<p style="font-size:12px;color:var(--red);">⚠️ لول شما کافی نیست (نیاز: Lv${GIFT_COST_LEVEL}، شما: Lv${myLevel})</p>`
+                  }
+                </div>`
+            }
+          </div>
+          <p style="font-size:11px;color:var(--text3);text-align:center;">آیتم‌های بیشتر به زودی اضافه می‌شوند...</p>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+};
+
+window.closeShopOverlay=function(){
+  const el=document.getElementById('shop-overlay');if(el)el.remove();
+};
+
+window.sendGiftToPost=function(pid){
+  if(ME.role==='owner'){toast('مالک نمیتونه به پست خودش هدیه بده','err');return;}
+  const myLevel=ME.level||1;
+  if(myLevel<GIFT_COST_LEVEL){toast(`لول کافی نیست (نیاز: Lv${GIFT_COST_LEVEL})`, 'err');return;}
+  const posts=getPosts(); const p=posts.find(x=>x.id===pid); if(!p)return;
+  // Deduct levels
+  const users=getUsers(); const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  users[idx].level=Math.max(1,(users[idx].level||1)-GIFT_COST_LEVEL);
+  ME=users[idx]; saveUsers(users);
+  // Add gift to post
+  if(!p.gifts)p.gifts=[];
+  p.gifts.push({id:uid(),senderId:ME.id,senderName:ME.name,ts:Date.now(),type:'teddy'});
+  savePosts(posts);
+  addNotif(p.userId,'gift',`🧸 ${ME.name} (@${ME.username}) به مالک پست تو خرس عروسکی هدیه داد!`,pid);
+  addLog(`${ME.name} به پست هدیه فرستاد`);
+  renderFeed();
+  toast(`🧸 هدیه ارسال شد! ${GIFT_COST_LEVEL} لول کم شد (لول جدید: Lv${ME.level||1})`,'ok');
+};
+
+/* ── BUILD POST (override with gifts + hidden + gift btn) ── */
+const _origBuildPost=window.buildPost||null;
+window.buildPost=function(p){
+  if(p.hidden&&ME.role!=='owner')return '';
+  const user=getUser(p.userId)||{name:'?',username:'?',color:'#888',ticks:[],level:1};
+  const pinnedId=DB.get('pinned_post');
+  const isPinned=p.id===pinnedId; const isHidden=p.hidden||false;
+  const liked=(p.likes||[]).includes(ME.id);
+  const bookmarked=(p.bookmarks||[]).includes(ME.id);
+  const canManage=p.userId===ME.id||ME.role==='owner';
+  const avSt=shapeStyle(user.avatarShape||'circle');
+  const avInner=user.avatarImg?`<img src="${esc(user.avatarImg)}" style="width:100%;height:100%;object-fit:cover;"/>`:(user.name||'?').slice(0,2).toUpperCase();
+
+  let mediaHtml='';
+  if(p.image)mediaHtml+=`<div style="margin-top:9px;"><img src="${esc(p.image)}" style="width:100%;border-radius:9px;max-height:420px;object-fit:cover;" loading="lazy"/></div>`;
+  if(p.video)mediaHtml+=`<div style="margin-top:9px;"><video src="${esc(p.video)}" controls style="width:100%;border-radius:9px;"></video></div>`;
+  if(p.location)mediaHtml+=`<div style="font-size:12px;color:var(--accent3);margin-top:6px;">📍 ${esc(p.location)}</div>`;
+  if(p.poll){
+    const total=p.poll.votes?Object.values(p.poll.votes).reduce((a,b)=>a+b,0):0;
+    const myVote=p.poll.userVotes?p.poll.userVotes[ME.id]:undefined;
+    mediaHtml+=`<div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;">
+      ${p.poll.options.map((opt,i)=>{
+        const votes=(p.poll.votes&&p.poll.votes[i])||0;
+        const pct=total>0?Math.round(votes/total*100):0;
+        return `<div onclick="votePoll('${p.id}',${i})" style="background:var(--bg3);border:1px solid ${myVote===i?'var(--accent)':'var(--border)'};border-radius:10px;padding:10px 14px;cursor:pointer;position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:rgba(124,58,237,.12);width:${myVote!==undefined?pct:0}%;transition:width .5s;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;font-size:13px;"><span>${esc(opt)}</span>${myVote!==undefined?`<span style="color:var(--accent3);font-weight:700;">${pct}%</span>`:''}</div>
+        </div>`;
+      }).join('')}
+      <div style="font-size:11px;color:var(--text3);">${total} رأی</div>
+    </div>`;
+  }
+
+  // Gifts display
+  const gifts=(p.gifts||[]);
+  const giftsHTML=gifts.length?`<div style="padding:6px 14px 4px;display:flex;flex-wrap:wrap;gap:5px;">${gifts.map(g=>`<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--gold);">🧸 <strong>${esc(g.senderName)}</strong> به مالک این پست هدیه داد</div>`).join('')}</div>`:'';
+
+  return `<div class="post${isPinned?' pinned-post':''}" id="post-${p.id}" style="${isHidden?'opacity:.6;border-color:rgba(239,68,68,.3);':''}">
+    ${isPinned?'<div class="pin-label">📌 پین شده</div>':''}
+    ${isHidden?'<div style="padding:3px 14px;font-size:10px;color:var(--red);background:rgba(239,68,68,.07);">👁 مخفی (فقط مالک می‌بینه)</div>':''}
+    <div class="post-header">
+      <div onclick="viewProfile('${p.userId}')" style="width:40px;height:40px;background:${user.color||'var(--accent)'};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;overflow:hidden;cursor:pointer;${avSt}">${avInner}</div>
+      <div class="post-meta">
+        <div class="post-author"><span>${esc(user.name)}</span>${ticksHTML(user)}</div>
+        <div class="post-handle">@${esc(user.username)}</div>
+      </div>
+      <span class="post-time">${timeAgo(p.ts)}</span>
+      ${canManage?`<button class="post-menu-btn" onclick="openPostCtx(event,'${p.id}')">⋯</button>`:''}
+    </div>
+    <div class="post-content">
+      <div class="post-text">${linkify(esc(p.text))}</div>
+      ${mediaHtml}
+    </div>
+    <div class="post-actions">
+      <button class="pa-btn${liked?' liked':''}" onclick="likePost('${p.id}')"><span class="pa-icon">♥</span>${(p.likes||[]).length}</button>
+      <button class="pa-btn" onclick="toggleCmts('${p.id}')"><span class="pa-icon">💬</span>${(p.comments||[]).length}</button>
+      <button class="pa-btn" onclick="sharePost('${p.id}')"><span class="pa-icon">↗</span></button>
+      <button class="pa-btn${bookmarked?' bookmarked':''}" onclick="bookmarkPost('${p.id}')"><span class="pa-icon">🔖</span></button>
+      ${p.userId!==ME.id?`<button class="pa-btn" onclick="sendGiftToPost('${p.id}')" title="هدیه 🧸" style="font-size:16px;">🧸</button>`:''}
+    </div>
+    ${giftsHTML}
+    <div class="comments-section" id="cmts-${p.id}" style="display:none;">
+      ${buildCmtsHTML(p)}
+      ${p.commentsOff?'<p style="font-size:12px;color:var(--text3);padding:6px 0;">کامنت‌ها غیرفعال</p>':buildCmtInput(p.id)}
+    </div>
+  </div>`;
+};
+
+/* ── ADMIN: addTick / removeTick ── */
+window.addTick=function(uid,tick){
+  if(!tick)return;
+  const users=getUsers(); const u=users.find(x=>x.id===uid); if(!u)return;
+  if(!u.ticks)u.ticks=[];
+  if(!u.ticks.includes(tick))u.ticks.push(tick);
+  saveUsers(users); if(uid===ME.id)ME=u;
+  addLog('تیک '+tick+' اضافه شد برای '+u.name); toast('✅ تیک اضافه شد','ok'); renderAdmin();
+};
+window.removeTick=function(uid,tick){
+  if(!tick)return;
+  const users=getUsers(); const u=users.find(x=>x.id===uid); if(!u)return;
+  u.ticks=(u.ticks||[]).filter(t=>t!==tick);
+  saveUsers(users); if(uid===ME.id)ME=u;
+  addLog('تیک '+tick+' حذف شد از '+u.name); toast('تیک حذف شد'); renderAdmin();
+};
+
+/* ── SECURITY: hide JamesD password from admin table ── */
+const _origRenderAdmin=window.renderAdmin;
+window.renderAdmin=function(){
+  _origRenderAdmin && _origRenderAdmin();
+  // Extra: ensure owner row shows no password
+};
+
+/* ── STORY: patch createStory for tag/highlight (already patched via textarea) ── */
+
+/* ── MOBILE NAV HELPERS ── */
+window.toggleMobileMore=function(){
+  const drawer=document.getElementById('mobile-more');
+  const backdrop=document.getElementById('mobile-more-backdrop');
+  const isOpen=drawer.classList.contains('open');
+  if(isOpen){drawer.classList.remove('open');backdrop.classList.remove('show');}
+  else{drawer.classList.add('open');backdrop.classList.add('show');}
+};
+window.closeMobileMore=function(){
+  document.getElementById('mobile-more').classList.remove('open');
+  document.getElementById('mobile-more-backdrop').classList.remove('show');
+};
+
+/* ══════════════════════════════════════════
+   CUBE v4 — NEW FEATURES
+══════════════════════════════════════════ */
+
+/* ── 1. DISLIKE POST ── */
+window.dislikePost=function(pid){
+  if(!canInteract(ME)){toast('حساب محدود شده','err');return;}
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  if(!p.dislikes)p.dislikes=[];
+  // Remove like if exists
+  if(p.likes)p.likes=p.likes.filter(id=>id!==ME.id);
+  const idx=p.dislikes.indexOf(ME.id);
+  if(idx>=0)p.dislikes.splice(idx,1);
+  else p.dislikes.push(ME.id);
+  savePosts(posts);renderFeed();
+};
+
+/* ── 3. DISLIKE COMMENT ── */
+window.dislikeCmt=function(pid,cid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  const c=p.comments?.find(x=>x.id===cid);if(!c)return;
+  if(!c.dislikes)c.dislikes=[];
+  // Remove like if exists
+  if(c.likedBy)c.likedBy=c.likedBy.filter(id=>id!==ME.id);
+  const idx=c.dislikes.indexOf(ME.id);
+  if(idx>=0)c.dislikes.splice(idx,1);
+  else c.dislikes.push(ME.id);
+  savePosts(posts);renderFeed();
+};
+
+// Also patch likeCmt to track by user
+window.likeCmt=function(pid,cid){
+  const posts=getPosts();const p=posts.find(x=>x.id===pid);if(!p)return;
+  const c=p.comments?.find(x=>x.id===cid);if(!c)return;
+  if(!c.likedBy)c.likedBy=[];
+  // Remove dislike if exists
+  if(c.dislikes)c.dislikes=c.dislikes.filter(id=>id!==ME.id);
+  const idx=c.likedBy.indexOf(ME.id);
+  if(idx>=0)c.likedBy.splice(idx,1);
+  else c.likedBy.push(ME.id);
+  c.likes=(c.likedBy||[]).length;
+  savePosts(posts);renderFeed();
+};
+
+/* ── 2. IDEA SUBMISSION ── */
+function getIdeas(){return DB.get('cube_ideas')||[];}
+function saveIdeas(a){DB.set('cube_ideas',a);}
+
+window.openIdeaModal=function(){
+  let overlay=document.getElementById('idea-overlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='idea-overlay';
+    overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+    overlay.innerHTML=`
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;">
+        <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <h3 style="font-size:15px;font-weight:800;">💡 ارسال ایده</h3>
+          <button onclick="document.getElementById('idea-overlay').remove()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+        </div>
+        <div style="padding:18px;">
+          <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.7;">
+            📋 <strong>قوانین ارسال ایده:</strong><br>
+            ۱. ایده باید مرتبط با بهبود Cube باشد<br>
+            ۲. از ارسال ایده‌های تکراری خودداری کنید<br>
+            ۳. ایده باید واضح و قابل اجرا باشد<br>
+            ۴. محتوای توهین‌آمیز مجاز نیست<br>
+            ۵. هر کاربر روزانه حداکثر ۳ ایده می‌تواند ارسال کند
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">عنوان ایده</label>
+            <input id="idea-title" placeholder="عنوان کوتاه و واضح..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-size:14px;outline:none;" oninput="this.style.borderColor=this.value.length>5?'var(--accent)':'var(--border)'"/>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">دسته‌بندی</label>
+            <select id="idea-cat" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);font-size:14px;outline:none;">
+              <option value="feature">✨ قابلیت جدید</option>
+              <option value="ui">🎨 بهبود رابط کاربری</option>
+              <option value="performance">⚡ بهبود عملکرد</option>
+              <option value="security">🔐 امنیت</option>
+              <option value="other">💬 سایر</option>
+            </select>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">توضیحات</label>
+            <textarea id="idea-desc" rows="4" placeholder="ایده‌ات را کامل توضیح بده..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);font-size:13px;resize:none;outline:none;line-height:1.6;"></textarea>
+          </div>
+          <button onclick="submitIdea()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">💡 ارسال ایده</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+  } else { overlay.style.display='flex'; }
+};
+
+window.submitIdea=function(){
+  const title=document.getElementById('idea-title')?.value.trim();
+  const desc=document.getElementById('idea-desc')?.value.trim();
+  const cat=document.getElementById('idea-cat')?.value;
+  if(!title||title.length<5){toast('عنوان حداقل ۵ کاراکتر','err');return;}
+  if(!desc||desc.length<10){toast('توضیحات حداقل ۱۰ کاراکتر','err');return;}
+  // Rate limit: 3 per day
+  const ideas=getIdeas();
+  const today=new Date().toDateString();
+  const todayCount=ideas.filter(i=>i.userId===ME.id&&new Date(i.ts).toDateString()===today).length;
+  if(todayCount>=3){toast('امروز ۳ ایده ارسال کردی — فردا بیا!','err');return;}
+  ideas.push({id:uid(),userId:ME.id,userName:ME.name,userHandle:ME.username,title,desc,cat,ts:Date.now(),status:'pending',votes:[]});
+  saveIdeas(ideas);
+  addLog(ME.name+' ایده ارسال کرد: '+title);
+  document.getElementById('idea-overlay')?.remove();
+  toast('✅ ایده ارسال شد! تیم Cube بررسی می‌کند','ok');
+};
+
+/* ── 5. BUG REPORT ── */
+function getBugs(){return DB.get('cube_bugs')||[];}
+function saveBugs(a){DB.set('cube_bugs',a);}
+
+window.openBugReport=function(){
+  let overlay=document.getElementById('bug-overlay');
+  if(overlay){overlay.style.display='flex';return;}
+  overlay=document.createElement('div');
+  overlay.id='bug-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;">
+      <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:15px;font-weight:800;">🐛 گزارش باگ</h3>
+        <button onclick="document.getElementById('bug-overlay').remove()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:18px;">
+        <div style="margin-bottom:12px;">
+          <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">عنوان مشکل</label>
+          <input id="bug-title" placeholder="مثال: دکمه لایک کار نمی‌کند..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px 12px;color:var(--text);font-size:14px;outline:none;"/>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">شدت مشکل</label>
+          <select id="bug-severity" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);font-size:14px;outline:none;">
+            <option value="low">🟡 کم — مشکل جزئی</option>
+            <option value="medium">🟠 متوسط — کاربرد را مختل می‌کند</option>
+            <option value="high">🔴 زیاد — قابلیت کار نمی‌کند</option>
+            <option value="critical">⛔ بحرانی — سایت معیوب است</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">مراحل بازتولید</label>
+          <textarea id="bug-steps" rows="3" placeholder="۱. رفتم به صفحه پست&#10;۲. روی لایک زدم&#10;۳. پیام خطا ظاهر شد..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);font-size:13px;resize:none;outline:none;line-height:1.6;"></textarea>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="font-size:11px;color:var(--text2);font-weight:600;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">نتیجه مورد انتظار (اختیاری)</label>
+          <input id="bug-expected" placeholder="انتظار داشتم که..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--text);font-size:13px;outline:none;"/>
+        </div>
+        <button onclick="submitBug()" style="width:100%;padding:12px;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;">🐛 ارسال گزارش</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window.submitBug=function(){
+  const title=document.getElementById('bug-title')?.value.trim();
+  const steps=document.getElementById('bug-steps')?.value.trim();
+  const severity=document.getElementById('bug-severity')?.value;
+  const expected=document.getElementById('bug-expected')?.value.trim();
+  if(!title){toast('عنوان مشکل الزامی است','err');return;}
+  if(!steps){toast('مراحل بازتولید الزامی است','err');return;}
+  const bugs=getBugs();
+  bugs.push({id:uid(),userId:ME.id,userName:ME.name,userHandle:ME.username,title,steps,severity,expected,ts:Date.now(),status:'open'});
+  saveBugs(bugs);
+  addLog(ME.name+' باگ گزارش کرد: '+title+' ['+severity+']');
+  document.getElementById('bug-overlay')?.remove();
+  toast('✅ گزارش باگ ارسال شد! ممنون از کمکت','ok');
+};
+
+/* ── 7. GIF AVATAR (Premium only, max 5s / 5MB) ── */
+window.uploadGifAvatar=function(e){
+  const hasPremium=(ME.ticks||[]).includes('gold');
+  if(!hasPremium){toast('🔒 آپلود گیف پروفایل فقط برای پرمیوم 💎','err');return;}
+  const f=e.target.files[0];if(!f)return;
+  if(!f.type.includes('gif')){toast('فقط فایل GIF مجاز است','err');return;}
+  if(f.size>5*1024*1024){toast('حداکثر حجم ۵ مگابایت','err');return;}
+  const r=new FileReader();
+  r.onload=ev=>{
+    // We can't truly check duration in browser without playing, show warning
+    toast('⚠️ توجه: گیف باید حداکثر ۵ ثانیه باشد');
+    const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+    if(idx<0)return;
+    users[idx].avatarGif=ev.target.result;
+    users[idx].avatarImg=ev.target.result; // also set as main avatar
+    ME=users[idx];saveUsers(users);
+    updateSidebar();
+    renderProfile(ME.id);
+    toast('✅ گیف پروفایل آپدیت شد','ok');
+    addLog(ME.name+' گیف پروفایل آپلود کرد');
+  };
+  r.readAsDataURL(f);
+};
+
+/* ── 8. SCHEDULED AVATAR (Premium only, max 5 slots) ── */
+function getScheduledAvatars(){
+  const users=getUsers();const u=users.find(x=>x.id===ME.id);
+  return u?.scheduledAvatars||[];
+}
+function saveScheduledAvatars(slots){
+  const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  users[idx].scheduledAvatars=slots;ME=users[idx];saveUsers(users);
+}
+
+window.openScheduledAvatar=function(){
+  const hasPremium=(ME.ticks||[]).includes('gold');
+  if(!hasPremium){toast('🔒 پروفایل زمان‌بندی شده فقط برای پرمیوم 💎','err');return;}
+  const slots=getScheduledAvatars();
+  let slotsHTML=slots.map((s,i)=>`
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+      <img src="${esc(s.img)}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;"/>
+      <div style="flex:1;font-size:12px;color:var(--text2);">⏰ ${s.startHour}:00 — ${s.endHour}:00</div>
+      <button onclick="removeScheduledSlot(${i})" style="background:transparent;border:none;color:var(--red);font-size:16px;cursor:pointer;">✕</button>
+    </div>`).join('');
+
+  let overlay=document.getElementById('sched-av-overlay');
+  if(overlay)overlay.remove();
+  overlay=document.createElement('div');
+  overlay.id='sched-av-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;">
+      <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:15px;font-weight:800;">⏰ پروفایل زمان‌بندی شده 💎</h3>
+        <button onclick="document.getElementById('sched-av-overlay').remove()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:18px;">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.7;">عکس‌های مختلف برای ساعات مختلف روز تنظیم کن. حداکثر ۵ تایم اسلات. <strong style="color:var(--gold);">${slots.length}/5 اسلات</strong></p>
+        <div id="sched-slots-list">${slotsHTML||'<p style="color:var(--text3);font-size:13px;text-align:center;padding:14px;">هنوز اسلاتی اضافه نشده</p>'}</div>
+        ${slots.length<5?`
+        <div style="background:var(--bg3);border:1px dashed var(--border);border-radius:12px;padding:16px;margin-top:12px;">
+          <p style="font-size:13px;font-weight:700;margin-bottom:10px;">➕ اسلات جدید</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:11px;color:var(--text3);">از ساعت</label>
+              <select id="sched-start" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px;color:var(--text);font-size:13px;outline:none;margin-top:4px;">
+                ${Array.from({length:24},(_,h)=>`<option value="${h}">${String(h).padStart(2,'0')}:00</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text3);">تا ساعت</label>
+              <select id="sched-end" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px;color:var(--text);font-size:13px;outline:none;margin-top:4px;">
+                ${Array.from({length:24},(_,h)=>`<option value="${h+1<=23?h+1:0}">${String(h+1<=23?h+1:0).padStart(2,'0')}:00</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <button onclick="document.getElementById('sched-img-up').click()" style="width:100%;padding:9px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--text2);font-size:13px;cursor:pointer;margin-bottom:8px;">📷 انتخاب عکس برای این بازه</button>
+          <input type="file" id="sched-img-up" accept="image/*" style="display:none" onchange="addSchedSlot(event)"/>
+        </div>
+        `:'<p style="text-align:center;color:var(--text3);font-size:12px;margin-top:12px;">حداکثر ۵ اسلات مجاز است</p>'}
+        <button onclick="saveSchedAvatars()" style="width:100%;padding:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:14px;">💾 ذخیره</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window.addSchedSlot=function(e){
+  const f=e.target.files[0];if(!f)return;
+  const slots=getScheduledAvatars();
+  if(slots.length>=5){toast('حداکثر ۵ اسلات مجاز است','err');return;}
+  const startH=parseInt(document.getElementById('sched-start')?.value||0);
+  const endH=parseInt(document.getElementById('sched-end')?.value||1);
+  const r=new FileReader();
+  r.onload=ev=>{
+    slots.push({img:ev.target.result,startHour:startH,endHour:endH});
+    saveScheduledAvatars(slots);
+    toast('✅ اسلات اضافه شد');
+    openScheduledAvatar();
+  };
+  r.readAsDataURL(f);
+};
+
+window.removeScheduledSlot=function(idx){
+  const slots=getScheduledAvatars();
+  slots.splice(idx,1);saveScheduledAvatars(slots);
+  openScheduledAvatar();
+};
+
+window.saveSchedAvatars=function(){
+  document.getElementById('sched-av-overlay')?.remove();
+  toast('✅ پروفایل زمان‌بندی شده ذخیره شد','ok');
+  checkScheduledAvatar();
+};
+
+function checkScheduledAvatar(){
+  if(!ME)return;
+  const hasPremium=(ME.ticks||[]).includes('gold');
+  if(!hasPremium)return;
+  const users=getUsers();const u=users.find(x=>x.id===ME.id);
+  if(!u?.scheduledAvatars?.length)return;
+  const nowH=new Date().getHours();
+  const active=u.scheduledAvatars.find(s=>{
+    if(s.startHour<s.endHour) return nowH>=s.startHour&&nowH<s.endHour;
+    return nowH>=s.startHour||nowH<s.endHour; // overnight
+  });
+  if(active&&u.avatarImg!==active.img){
+    const idx=users.findIndex(x=>x.id===ME.id);
+    if(idx>=0){users[idx].avatarImg=active.img;ME=users[idx];saveUsers(users);}
+    updateSidebar();
+  }
+}
+// Check every minute
+setInterval(checkScheduledAvatar,60000);
+
+/* ── 4. SHOP: BUY BADGE/GIFT FOR SELF OR OTHERS ── */
+// Patch shop page to add badge item and "gift to friend" option
+const _origRenderShop=window.renderShopPage||null;
+
+function patchShopGiftForOthers(){
+  // Add "gift to user" button in shop — handled in renderShop override
+}
+
+// Override sendGiftToPost to also support gifting badge items
+window.buyBadgeForSelf=function(badgeId,cost){
+  const myLv=ME.level||1;
+  if(myLv<cost){toast(`لول کافی نیست (نیاز: Lv${cost})`, 'err');return;}
+  const badges={teddy:{icon:'🧸',name:'خرس تدی'},star:{icon:'⭐',name:'ستاره'},heart:{icon:'❤️',name:'قلب'}};
+  const b=badges[badgeId];if(!b)return;
+  if(!confirm(`خرید ${b.icon} ${b.name} برای خودت؟ هزینه: ${cost} لول`))return;
+  const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  users[idx].level=Math.max(1,(users[idx].level||1)-cost);
+  if(!users[idx].ownedBadges)users[idx].ownedBadges=[];
+  users[idx].ownedBadges.push({id:badgeId,...b,ts:Date.now()});
+  ME=users[idx];saveUsers(users);
+  toast(`✅ ${b.icon} ${b.name} خریداری شد! (لول: Lv${ME.level})`,'ok');
+  addLog(ME.name+' بج خرید: '+b.name);
+  showPage('shop');
+};
+
+window.buyGiftForUser=function(badgeId,cost){
+  const myLv=ME.level||1;
+  if(myLv<cost){toast(`لول کافی نیست (نیاز: Lv${cost})`, 'err');return;}
+  const badges={teddy:{icon:'🧸',name:'خرس تدی'},star:{icon:'⭐',name:'ستاره'},rose:{icon:'🌹',name:'گل رز'}};
+  const b=badges[badgeId];if(!b)return;
+
+  // Show user picker
+  let overlay=document.getElementById('gift-user-overlay');
+  if(overlay)overlay.remove();
+  overlay=document.createElement('div');
+  overlay.id='gift-user-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+  const users=getUsers().filter(u=>u.id!==ME.id);
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:380px;max-height:80vh;overflow-y:auto;">
+      <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:15px;font-weight:800;">${b.icon} هدیه به کاربر</h3>
+        <button onclick="document.getElementById('gift-user-overlay').remove()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:16px;">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">هزینه: <strong style="color:var(--gold);">${cost} لول</strong> | موجودی: <strong style="color:var(--accent3);">Lv${myLv}</strong></p>
+        <div style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;">
+          ${users.map(u=>`
+            <div onclick="confirmGiftToUser('${u.id}','${badgeId}',${cost})" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border)'">
+              <div style="width:38px;height:38px;border-radius:50%;background:${u.color||'var(--accent)'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;overflow:hidden;">
+                ${u.avatarImg?`<img src="${esc(u.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`:(u.name||'?').slice(0,2).toUpperCase()}
+              </div>
+              <div><div style="font-weight:700;font-size:13px;">${esc(u.name)}</div><div style="font-size:11px;color:var(--text2);">@${esc(u.username)}</div></div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window.confirmGiftToUser=function(targetId,badgeId,cost){
+  const badges={teddy:{icon:'🧸',name:'خرس تدی'},star:{icon:'⭐',name:'ستاره'},rose:{icon:'🌹',name:'گل رز'}};
+  const b=badges[badgeId];if(!b)return;
+  const target=getUser(targetId);if(!target)return;
+  if(!confirm(`${b.icon} ${b.name} به ${target.name} هدیه بدی؟`))return;
+  const myLv=ME.level||1;
+  if(myLv<cost){toast('لول کافی نیست','err');return;}
+  const users=getUsers();
+  const myIdx=users.findIndex(u=>u.id===ME.id);
+  const tIdx=users.findIndex(u=>u.id===targetId);
+  if(myIdx<0||tIdx<0)return;
+  users[myIdx].level=Math.max(1,(users[myIdx].level||1)-cost);
+  if(!users[tIdx].receivedGifts)users[tIdx].receivedGifts=[];
+  users[tIdx].receivedGifts.push({id:uid(),fromId:ME.id,fromName:ME.name,fromHandle:ME.username,...b,badgeId,ts:Date.now()});
+  ME=users[myIdx];saveUsers(users);
+  addNotif(targetId,'gift',`${b.icon} ${ME.name} به تو ${b.name} هدیه داد! 🎁`);
+  document.getElementById('gift-user-overlay')?.remove();
+  toast(`✅ ${b.icon} هدیه ارسال شد! (لول: Lv${ME.level})`,'ok');
+  addLog(ME.name+' به '+target.name+' هدیه فرستاد: '+b.name);
+};
+
+/* ── PATCH buildPost: add dislike button ── */
+window.buildPost=function(p){
+  if(p.hidden&&ME.role!=='owner')return '';
+  const user=getUser(p.userId)||{name:'?',username:'?',color:'#888',ticks:[],level:1};
+  const pinnedId=DB.get('pinned_post');
+  const isPinned=p.id===pinnedId;const isHidden=p.hidden||false;
+  const liked=(p.likes||[]).includes(ME.id);
+  const disliked=(p.dislikes||[]).includes(ME.id);
+  const bookmarked=(p.bookmarks||[]).includes(ME.id);
+  const canManage=p.userId===ME.id||ME.role==='owner';
+  const avSt=typeof shapeStyle==='function'?shapeStyle(user.avatarShape||'circle'):'border-radius:50%;';
+  const avInner=user.avatarImg?`<img src="${esc(user.avatarImg)}" style="width:100%;height:100%;object-fit:cover;"/>`:(user.name||'?').slice(0,2).toUpperCase();
+
+  let mediaHtml='';
+  if(p.image)mediaHtml+=`<div style="margin-top:9px;"><img src="${esc(p.image)}" style="width:100%;border-radius:9px;max-height:420px;object-fit:cover;" loading="lazy"/></div>`;
+  if(p.video)mediaHtml+=`<div style="margin-top:9px;"><video src="${esc(p.video)}" controls style="width:100%;border-radius:9px;"></video></div>`;
+  if(p.location)mediaHtml+=`<div style="font-size:12px;color:var(--accent3);margin-top:6px;">📍 ${esc(p.location)}</div>`;
+  if(p.poll){
+    const total=p.poll.votes?Object.values(p.poll.votes).reduce((a,b2)=>a+b2,0):0;
+    const myVote=p.poll.userVotes?p.poll.userVotes[ME.id]:undefined;
+    mediaHtml+=`<div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;">
+      ${(p.poll.options||[]).map((opt,i)=>{
+        const votes=(p.poll.votes&&p.poll.votes[i])||0;
+        const pct=total>0?Math.round(votes/total*100):0;
+        return `<div onclick="votePoll('${p.id}',${i})" style="background:var(--bg3);border:1px solid ${myVote===i?'var(--accent)':'var(--border)'};border-radius:10px;padding:10px 14px;cursor:pointer;position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0;background:rgba(124,58,237,.12);width:${myVote!==undefined?pct:0}%;transition:width .5s;"></div>
+          <div style="position:relative;display:flex;justify-content:space-between;font-size:13px;"><span>${esc(opt)}</span>${myVote!==undefined?`<span style="color:var(--accent3);font-weight:700;">${pct}%</span>`:''}</div>
+        </div>`;
+      }).join('')}
+      <div style="font-size:11px;color:var(--text3);">${total} رأی</div>
+    </div>`;
+  }
+  const gifts=(p.gifts||[]);
+  const giftsHTML=gifts.length?`<div style="padding:6px 14px 4px;display:flex;flex-wrap:wrap;gap:5px;">${gifts.map(g=>`<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--gold);">🧸 <strong>${esc(g.senderName)}</strong> به مالک این پست هدیه داد</div>`).join('')}</div>`:'';
+
+  return `<div class="post${isPinned?' pinned-post':''}" id="post-${p.id}" style="${isHidden?'opacity:.6;border-color:rgba(239,68,68,.3);':''}">
+    ${isPinned?'<div class="pin-label">📌 پین شده</div>':''}
+    ${isHidden?'<div style="padding:3px 14px;font-size:10px;color:var(--red);background:rgba(239,68,68,.07);">👁 مخفی</div>':''}
+    <div class="post-header">
+      <div onclick="viewProfile('${p.userId}')" style="width:40px;height:40px;background:${user.color||'var(--accent)'};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;overflow:hidden;cursor:pointer;${avSt}">${avInner}</div>
+      <div class="post-meta">
+        <div class="post-author"><span>${esc(user.name)}</span>${ticksHTML(user)}</div>
+        <div class="post-handle">@${esc(user.username)}</div>
+      </div>
+      <span class="post-time">${timeAgo(p.ts)}</span>
+      ${canManage?`<button class="post-menu-btn" onclick="openPostCtx(event,'${p.id}')">⋯</button>`:''}
+    </div>
+    <div class="post-content">
+      <div class="post-text">${linkify(esc(p.text))}</div>
+      ${mediaHtml}
+    </div>
+    <div class="post-actions">
+      <button class="pa-btn${liked?' liked':''}" onclick="likePost('${p.id}')" style="${liked?'color:var(--red);':''}"><span class="pa-icon">♥</span>${(p.likes||[]).length}</button>
+      <button class="pa-btn${disliked?'':''}" onclick="dislikePost('${p.id}')" style="${disliked?'color:#6366f1;':''}"><span class="pa-icon">👎</span>${(p.dislikes||[]).length}</button>
+      <button class="pa-btn" onclick="toggleCmts('${p.id}')"><span class="pa-icon">💬</span>${(p.comments||[]).length}</button>
+      <button class="pa-btn" onclick="sharePost('${p.id}')"><span class="pa-icon">↗</span></button>
+      <button class="pa-btn${bookmarked?' bookmarked':''}" onclick="bookmarkPost('${p.id}')"><span class="pa-icon">🔖</span></button>
+      ${p.userId!==ME.id?`<button class="pa-btn" onclick="sendGiftToPost('${p.id}')" style="font-size:15px;">🧸</button>`:''}
+    </div>
+    ${giftsHTML}
+    <div class="comments-section" id="cmts-${p.id}" style="display:none;">
+      ${buildCmtsHTML(p)}
+      ${p.commentsOff?'<p style="font-size:12px;color:var(--text3);padding:6px 0;">کامنت‌ها غیرفعال</p>':buildCmtInput(p.id)}
+    </div>
+  </div>`;
+};
+
+/* ── PATCH buildCmtsHTML: add dislike button on comments ── */
+function buildCmtsHTML(p){
+  if(!p.comments||!p.comments.length)return '';
+  const pinned=p.comments.filter(c=>c.pinned);
+  const rest=p.comments.filter(c=>!c.pinned);
+  return [...pinned,...rest].map(c=>{
+    const cu=getUser(c.userId)||{name:'?',color:'#888',ticks:[],level:1};
+    const cLiked=(c.likedBy||[]).includes(ME.id);
+    const cDisliked=(c.dislikes||[]).includes(ME.id);
+    const avSt2=typeof shapeStyle==='function'?shapeStyle(cu.avatarShape||'circle'):'border-radius:50%;';
+    return `<div class="comment${c.pinned?' pinned-c':''}" id="c-${c.id}">
+      ${c.pinned?'<div class="pinned-lbl">📌 پین</div>':''}
+      <div class="comment-av" style="background:${cu.color||'var(--accent)'};${avSt2}overflow:hidden;">${cu.avatarImg?`<img src="${esc(cu.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`:(cu.name||'?').slice(0,2).toUpperCase()}</div>
+      <div class="comment-body">
+        <div class="c-author-row"><span class="c-author">${esc(cu.name)} ${ticksHTML(cu)}</span><span class="c-time">${timeAgo(c.ts)}</span></div>
+        <div class="c-text">${esc(c.text)}</div>
+        <div class="c-acts">
+          <button class="c-act" onclick="likeCmt('${p.id}','${c.id}')" style="${cLiked?'color:var(--red);':''}">♥ ${(c.likedBy||[]).length||c.likes||0}</button>
+          <button class="c-act" onclick="dislikeCmt('${p.id}','${c.id}')" style="${cDisliked?'color:#6366f1;':''}">👎 ${(c.dislikes||[]).length||0}</button>
+          ${p.userId===ME.id||ME.role==='owner'||ME.role==='admin'?`<button class="c-act" onclick="pinCmt('${p.id}','${c.id}')">${c.pinned?'آن‌پین':'📌 پین'}</button><button class="c-act" style="color:var(--red);" onclick="delCmt('${p.id}','${c.id}')">🗑</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── ADD IDEA/BUG TO NAV ── */
+// Inject idea & bug buttons into more menu or settings if accessible
+(function injectFeedbackLinks(){
+  // Add to sidebar after settings
+  const navAdmin=document.getElementById('nav-admin');
+  if(navAdmin){
+    const ideaNav=document.createElement('div');
+    ideaNav.className='nav-item';
+    ideaNav.onclick=openIdeaModal;
+    ideaNav.innerHTML='<span class="ni-ico">💡</span>ارسال ایده';
+    const bugNav=document.createElement('div');
+    bugNav.className='nav-item';
+    bugNav.onclick=openBugReport;
+    bugNav.innerHTML='<span class="ni-ico">🐛</span>گزارش باگ';
+    navAdmin.parentNode.insertBefore(bugNav,navAdmin);
+    navAdmin.parentNode.insertBefore(ideaNav,bugNav);
+  }
+})();
+
+/* ── ADD GIF AVATAR & SCHEDULED AVATAR TO SETTINGS ── */
+(function injectPremiumSettings(){
+  const premSection=document.getElementById('premium-badge-section');
+  if(!premSection)return;
+  const gifDiv=document.createElement('div');
+  gifDiv.className='ss';
+  gifDiv.innerHTML=`<h3>🎞️ گیف پروفایل 💎 <span style="font-size:10px;color:var(--text3);">حداکثر ۵ ثانیه / ۵MB</span></h3>
+    <div class="sr">
+      <div class="sr-info"><h4>آپلود گیف</h4><p>فقط برای پرمیوم — GIF متحرک</p></div>
+      <button class="adm-btn" onclick="document.getElementById('gif-av-up').click()">🎞️ آپلود GIF</button>
+      <input type="file" id="gif-av-up" accept="image/gif" style="display:none" onchange="uploadGifAvatar(event)"/>
+    </div>`;
+  const schedDiv=document.createElement('div');
+  schedDiv.className='ss';
+  schedDiv.innerHTML=`<h3>⏰ پروفایل زمان‌بندی شده 💎</h3>
+    <div class="sr">
+      <div class="sr-info"><h4>تنظیم عکس برای ساعات مختلف</h4><p>حداکثر ۵ بازه زمانی</p></div>
+      <button class="adm-btn" onclick="openScheduledAvatar()">⏰ تنظیم</button>
+    </div>`;
+  premSection.after(schedDiv);
+  premSection.after(gifDiv);
+})();
+
+/* ── ADD IDEA/BUG TO ADMIN PANEL ── */
+const _patchAdmin=window.renderAdmin;
+window.renderAdmin=function(){
+  _patchAdmin&&_patchAdmin();
+  // Inject ideas and bugs tabs
+  setTimeout(()=>{
+    const adminArea=document.querySelector('#page-admin');
+    if(!adminArea)return;
+    // Ideas panel
+    if(!document.getElementById('adm-ideas-section')){
+      const ideas=getIdeas();const bugs=getBugs();
+      const sec=document.createElement('div');
+      sec.id='adm-ideas-section';
+      sec.style.cssText='padding:0 18px 18px;';
+      sec.innerHTML=`
+        <div class="admin-card" style="margin-top:14px;">
+          <h3 style="margin-bottom:12px;">💡 ایده‌های کاربران (${ideas.length})</h3>
+          ${ideas.length?ideas.slice(-10).reverse().map(i=>`
+            <div style="background:var(--bg3);border-radius:9px;padding:10px 12px;margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <strong style="font-size:13px;">${esc(i.title)}</strong>
+                <span style="font-size:10px;background:rgba(59,130,246,.2);color:var(--blue);padding:2px 7px;border-radius:10px;">${{feature:'✨ قابلیت',ui:'🎨 UI',performance:'⚡ عملکرد',security:'🔐 امنیت',other:'💬 سایر'}[i.cat]||i.cat}</span>
+              </div>
+              <div style="font-size:12px;color:var(--text2);">${esc(i.desc.slice(0,100))}${i.desc.length>100?'...':''}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px;">@${esc(i.userHandle)} · ${timeAgo(i.ts)}</div>
+            </div>`).join(''):'<p style="color:var(--text3);font-size:12px;text-align:center;padding:12px;">ایده‌ای ارسال نشده</p>'}
+        </div>
+        <div class="admin-card" style="margin-top:14px;">
+          <h3 style="margin-bottom:12px;">🐛 گزارش‌های باگ (${bugs.length})</h3>
+          ${bugs.length?bugs.slice(-10).reverse().map(b=>`
+            <div style="background:var(--bg3);border-radius:9px;padding:10px 12px;margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <strong style="font-size:13px;">${esc(b.title)}</strong>
+                <span style="font-size:10px;background:rgba(239,68,68,.2);color:var(--red);padding:2px 7px;border-radius:10px;">${{low:'🟡 کم',medium:'🟠 متوسط',high:'🔴 زیاد',critical:'⛔ بحرانی'}[b.severity]||b.severity}</span>
+              </div>
+              <div style="font-size:12px;color:var(--text2);">${esc((b.steps||'').slice(0,80))}${(b.steps||'').length>80?'...':''}</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:4px;">@${esc(b.userHandle)} · ${timeAgo(b.ts)}</div>
+            </div>`).join(''):'<p style="color:var(--text3);font-size:12px;text-align:center;padding:12px;">باگی گزارش نشده</p>'}
+        </div>`;
+      adminArea.appendChild(sec);
+    }
+  },200);
+};
+
+/* ══════════════════════════════════════════
+   CUBE SHOP v5 — FULL REWRITE
+══════════════════════════════════════════ */
+
+/* ── SHOP CATALOG ── */
+const SHOP_GIFTS=[
+  {id:'teddy',    emoji:'🧸', name:'خرس تدی',      desc:'هدیه عروسکی برای مالک پست',  cost:3, category:'post'},
+  {id:'rose',     emoji:'🌹', name:'گل رز',         desc:'هدیه رمانتیک به کاربر',       cost:2, category:'user'},
+  {id:'star',     emoji:'⭐', name:'ستاره طلایی',   desc:'هدیه ستاره به کاربر',         cost:3, category:'user'},
+  {id:'crown',    emoji:'👑', name:'تاج',            desc:'هدیه تاج شاهانه به کاربر',   cost:5, category:'user'},
+  {id:'diamond',  emoji:'💎', name:'الماس',          desc:'هدیه الماس ارزشمند',          cost:8, category:'user'},
+  {id:'heart',    emoji:'❤️', name:'قلب',            desc:'ابراز محبت به کاربر',         cost:1, category:'user'},
+  {id:'fire',     emoji:'🔥', name:'آتش',            desc:'هدیه آتشین به پست',           cost:2, category:'post'},
+  {id:'balloon',  emoji:'🎈', name:'بادکنک',         desc:'جشن برای مالک پست',           cost:2, category:'post'},
+];
+
+const SHOP_BADGES=[
+  {id:'badge_vip',     emoji:'🏅', name:'بج VIP',       desc:'بج VIP برای نام کاربریت — یک‌بار مصرف', cost:10, oneUse:true},
+  {id:'badge_cool',    emoji:'😎', name:'بج Cool',       desc:'بج Cool کنار نامت — یک‌بار مصرف',       cost:7,  oneUse:true},
+  {id:'badge_fire',    emoji:'🔥', name:'بج Fire',       desc:'بج آتش کنار نامت — یک‌بار مصرف',        cost:7,  oneUse:true},
+  {id:'badge_legend',  emoji:'⚡', name:'بج Legend',     desc:'بج لجند — یک‌بار مصرف',                 cost:12, oneUse:true},
+  {id:'badge_king',    emoji:'👑', name:'بج King',       desc:'بج پادشاه — یک‌بار مصرف',               cost:15, oneUse:true},
+];
+
+/* ── BADGE SYSTEM (no premium needed) ── */
+function getMyBadge(){
+  const u=getUser(ME.id);
+  return u?.shopBadge||null;
+}
+
+window.buyShopBadge=function(badgeId){
+  const item=SHOP_BADGES.find(b=>b.id===badgeId);
+  if(!item){toast('آیتم یافت نشد','err');return;}
+  const users=getUsers();
+  const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  const myLv=users[idx].level||1;
+  if(myLv<item.cost){toast(`لول کافی نیست — نیاز: Lv${item.cost}، شما: Lv${myLv}`,'err');return;}
+  // Deduct cost
+  users[idx].level=Math.max(1,myLv-item.cost);
+  // Set badge (overwrite old one — one-use means you pay each time to equip)
+  users[idx].shopBadge={id:item.id,emoji:item.emoji,name:item.name,ts:Date.now()};
+  ME=users[idx];saveUsers(users);
+  addLog(`${ME.name} بج ${item.name} خرید`);
+  toast(`✅ بج ${item.emoji} ${item.name} اضافه شد! Lv${ME.level||1} باقیمانده`,'ok');
+  renderShop();
+};
+
+window.removeShopBadge=function(){
+  const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  users[idx].shopBadge=null;ME=users[idx];saveUsers(users);
+  toast('بج حذف شد');renderShop();
+};
+
+/* ── SEND GIFT TO USER ── */
+window.openSendGiftToUser=function(giftId){
+  const item=SHOP_GIFTS.find(g=>g.id===giftId);
+  if(!item)return;
+  const users=getUsers().filter(u=>u.id!==ME.id);
+  const myLv=ME.level||1;
+  if(myLv<item.cost){toast(`لول کافی نیست — نیاز: Lv${item.cost}، شما: Lv${myLv}`,'err');return;}
+
+  let overlay=document.getElementById('gift-to-user-overlay');
+  if(overlay)overlay.remove();
+  overlay=document.createElement('div');
+  overlay.id='gift-to-user-overlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);';
+  overlay.innerHTML=`
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:380px;overflow:hidden;">
+      <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <h3 style="font-size:15px;font-weight:800;">${item.emoji} هدیه به کاربر</h3>
+        <button onclick="document.getElementById('gift-to-user-overlay').remove()" style="background:transparent;border:none;color:var(--text2);font-size:22px;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:18px;">
+        <div style="background:var(--bg3);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:12px;align-items:center;">
+          <span style="font-size:36px;">${item.emoji}</span>
+          <div><div style="font-weight:700;font-size:14px;">${item.name}</div><div style="font-size:12px;color:var(--gold);margin-top:3px;">هزینه: ${item.cost} لول</div></div>
+        </div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">به کدام کاربر هدیه بدی؟</p>
+        <div style="max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
+          ${users.map(u=>`
+            <div onclick="confirmGiftUser('${u.id}','${giftId}')" style="display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='rgba(124,58,237,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background=''">
+              <div style="width:36px;height:36px;border-radius:50%;background:${u.color||'var(--accent)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;overflow:hidden;flex-shrink:0;">
+                ${u.avatarImg?`<img src="${esc(u.avatarImg)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>`:(u.name||'?').slice(0,2).toUpperCase()}
+              </div>
+              <div><div style="font-weight:600;font-size:13px;">${esc(u.name)}</div><div style="font-size:11px;color:var(--text3);">@${esc(u.username)}</div></div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+};
+
+window.confirmGiftUser=function(toUserId,giftId){
+  const item=SHOP_GIFTS.find(g=>g.id===giftId);
+  const toUser=getUser(toUserId);
+  if(!item||!toUser)return;
+  const users=getUsers();const idx=users.findIndex(u=>u.id===ME.id);
+  if(idx<0)return;
+  const myLv=users[idx].level||1;
+  if(myLv<item.cost){toast(`لول کافی نیست — نیاز: Lv${item.cost}`,'err');return;}
+  users[idx].level=Math.max(1,myLv-item.cost);
+  ME=users[idx];saveUsers(users);
+  // Record gift received
+  const rcvd=DB.get('gifts_received')||{};
+  if(!rcvd[toUserId])rcvd[toUserId]=[];
+  rcvd[toUserId].unshift({id:uid(),fromId:ME.id,fromName:ME.name,fromHandle:ME.username,giftId,emoji:item.emoji,giftName:item.name,ts:Date.now()});
+  DB.set('gifts_received',rcvd);
+  addNotif(toUserId,'gift',`${item.emoji} ${ME.name} (@${ME.username}) بهت هدیه ${item.name} فرستاد!`);
+  addLog(`${ME.name} → ${toUser.name}: ${item.emoji} ${item.name}`);
+  document.getElementById('gift-to-user-overlay')?.remove();
+  toast(`✅ ${item.emoji} ${item.name} برای ${toUser.name} ارسال شد! Lv${ME.level||1} باقیمانده`,'ok');
+  renderShop();
+};
+
+/* ── MAIN SHOP RENDER ── */
+window.renderShop=function(){
+  const myLv=ME.level||1;
+  const myBadge=getMyBadge();
+
+  // Update balance display
+  const balEl=document.getElementById('shop-balance-lv');
+  if(balEl)balEl.textContent=`Lv${myLv}`;
+
+  // My badge display
+  const myBadgeHTML=myBadge
+    ?`<div style="display:flex;align-items:center;gap:10px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:10px 14px;margin-bottom:16px;">
+        <span style="font-size:28px;">${myBadge.emoji}</span>
+        <div style="flex:1;"><div style="font-weight:700;font-size:13px;">بج فعال: ${esc(myBadge.name)}</div><div style="font-size:11px;color:var(--text3);margin-top:2px;">کنار اسمت نشون داده می‌شه</div></div>
+        <button onclick="removeShopBadge()" style="background:transparent;border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;">حذف</button>
+      </div>`
+    :'';
+
+  // Render gifts by category
+  const postGifts=SHOP_GIFTS.filter(g=>g.category==='post');
+  const userGifts=SHOP_GIFTS.filter(g=>g.category==='user');
+
+  const giftCard=(g,targetType)=>{
+    const canAfford=myLv>=g.cost;
+    const btnStyle=canAfford?'':'opacity:.5;cursor:not-allowed;';
+    const label=targetType==='post'?'هدیه به پست 🎯':'هدیه به کاربر 👤';
+    const action=targetType==='post'
+      ?`toast('برای هدیه به پست، روی دکمه ${g.emoji} زیر پست بزن','ok')`
+      :`openSendGiftToUser('${g.id}')`;
+    return `<div class="shop-item">
+      <div class="shop-item-emoji">${g.emoji}</div>
+      <div class="shop-item-name">${g.name}</div>
+      <div class="shop-item-desc">${g.desc}</div>
+      <div class="shop-item-price">🎯 ${g.cost} لول</div>
+      <button class="shop-buy-btn" style="${btnStyle}" onclick="${action}" ${canAfford?'':'disabled'}>${label}</button>
+    </div>`;
+  };
+
+  const badgeCard=(b)=>{
+    const canAfford=myLv>=b.cost;
+    const isActive=myBadge?.id===b.id;
+    return `<div class="shop-item" style="${isActive?'border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.06);':''}">
+      ${isActive?'<div class="shop-item-badge" style="background:var(--accent);">✓ فعال</div>':''}
+      <div class="shop-item-emoji">${b.emoji}</div>
+      <div class="shop-item-name">${b.name}</div>
+      <div class="shop-item-desc">${b.desc}</div>
+      <div class="shop-item-price">🎯 ${b.cost} لول</div>
+      <button class="shop-buy-btn" style="${canAfford?'':'opacity:.5;cursor:not-allowed;'}" onclick="buyShopBadge('${b.id}')" ${canAfford?'':'disabled'}>
+        ${isActive?'دوباره تجدید':'خرید بج'}
+      </button>
+    </div>`;
+  };
+
+  const giftsGrid=document.getElementById('shop-gifts-grid');
+  const profileGrid=document.getElementById('shop-profile-grid');
+  if(!giftsGrid||!profileGrid)return;
+
+  // Section 1: gifts for posts
+  document.querySelector('#page-shop .shop-section-title').textContent='🧸 هدایای پست';
+  giftsGrid.innerHTML=postGifts.map(g=>giftCard(g,'post')).join('');
+
+  // Section 2: gifts for users + badges together
+  document.querySelectorAll('#page-shop .shop-section-title')[1].innerHTML='🎁 هدایای کاربر & بج‌ها';
+  profileGrid.innerHTML=myBadgeHTML+
+    `<div style="grid-column:1/-1;"><div class="shop-section-title" style="margin-top:4px;margin-bottom:10px;">👤 هدایای کاربر</div></div>`+
+    userGifts.map(g=>giftCard(g,'user')).join('')+
+    `<div style="grid-column:1/-1;"><div class="shop-section-title" style="margin-top:14px;margin-bottom:10px;">🏅 بج‌ها (بدون پرمیوم)</div></div>`+
+    SHOP_BADGES.map(b=>badgeCard(b)).join('');
+};
+
+/* ── NOTIF BADGE SYNC ── */
+function syncNotifBadge(){
+  if(!ME)return;
+  const all=DB.get('notifs')||{};
+  const unread=((all[ME.id])||[]).filter(n=>!n.read).length;
+  const sb=document.getElementById('notif-badge');
+  if(sb){sb.textContent=unread;sb.style.display=unread?'':'none';}
+  const mb=document.getElementById('mn-notif-badge');
+  if(mb){mb.textContent=unread;if(unread)mb.classList.add('show');else mb.classList.remove('show');}
+}
+setInterval(syncNotifBadge,4000);
+
+/* ── BOOT ── */
+const sid=DB.get('session');
+if(sid){const u=getUser(sid);if(u){ME=u;startApp();}}
+
+}());
+</script>
+</body>
+</html>
